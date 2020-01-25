@@ -27,8 +27,8 @@ public class GameManagerScript : MonoBehaviour {
     //Scripts (aaaaaaaaaaaaaa)
     InputScript inputManager;
 	AudioMangagerScript audioManager;
-	public MapScript activeMap;
-	public GameStateScript gameState;
+
+	//public GameStateScript gameState;
 	public UIManagerScript uiManager;
 	public UIManagerScript uiManagerMobile;
 
@@ -54,6 +54,8 @@ public class GameManagerScript : MonoBehaviour {
 
 
 	[Header("Instance Variables")]
+	public MapScript activeMap;
+
 	public int mouseTileX;
 	public int mouseTileY;
 
@@ -237,59 +239,6 @@ public class GameManagerScript : MonoBehaviour {
 		}
 		return result;
 	}
-	/*
-	void CreateWorld(int sizeX, int sizeY) {
-		int regionDistance = regionSize + borderSize;
-		world = new MapScript[sizeX, sizeY];
-		//bordersCross = new GameObject[sizeX + 1, sizeY + 1];
-		//bordersX = new GameObject[sizeX, sizeY + 1];
-		//bordersY = new GameObject[sizeX + 1, sizeY];
-
-		//CreateRegions
-		for (int x = 0; x < sizeX; x++) {
-			for (int y = 0; y < sizeY; y++) {
-				GameObject newRegion = Instantiate(regionPrefab, new Vector3((x-y) * regionDistance/ 2f, (x+y) * regionDistance/ 4f, 200), Quaternion.identity, transform);
-				newRegion.transform.name = "Region " + x + ", " + y;
-				MapScript newRegionScript = newRegion.GetComponent<MapScript>();
-                newRegionScript.globalX = x * regionDistance; newRegionScript.globalY = y * regionDistance;
-				newRegionScript.uiManager = uiManager;
-				newRegionScript.CreateTiles(tilePrefab, regionSize, regionSize, x * (regionSize + borderSize), y * (regionSize + borderSize));
-				newRegionScript.districtName = "Regio " + IntToRoman(sizeX * y + x + 1) + " - Artisan Quarter";
-				world[x, y] = newRegionScript;
-			}
-		}
-		*/
-        /*
-		//Crossroads
-		for (int x = 0; x <= sizeX; x++) {
-			for (int y = 0; y <= sizeY; y++) {
-				bordersCross[x, y] = Instantiate(borderCrossPrefab, new Vector3((x - y) * regionDistance / 2f, ((x + y) * regionDistance - borderSize * 2) / 4f, x + y + 199.5f), Quaternion.identity, transform);
-				bordersCross[x, y].transform.name = "BorderCross " + x + ", " + y;
-				bordersCross[x, y].GetComponent<BorderScript>().x = x; bordersCross[x, y].GetComponent<BorderScript>().y = y;
-			}
-		}
-
-		//X Borders
-		for (int x = 0; x < sizeX; x++) {
-			for (int y = 0; y <= sizeY; y++) {
-				bordersX[x, y] = Instantiate(borderXPrefab, new Vector3(((x - y) * regionDistance + borderSize)  / 2f, ((x + y) * regionDistance - borderSize) / 4f, x + y + 200), Quaternion.identity, transform);
-				bordersX[x, y].transform.name = "BorderX " + x + ", " + y;
-				bordersX[x, y].GetComponent<BorderScript>().x = x; bordersCross[x, y].GetComponent<BorderScript>().y = y;
-			}
-		}
-
-		//Y Borders
-		for (int x = 0; x <= sizeX; x++) {
-			for (int y = 0; y < sizeY; y++) {
-				bordersY[x, y] = Instantiate(borderYPrefab, new Vector3(((x - y) * regionDistance - borderSize) / 2f, ((x + y) * regionDistance - borderSize) / 4f, x + y + 200), Quaternion.identity, transform);
-				bordersY[x, y].transform.name = "BorderY " + x + ", " + y;
-				bordersY[x, y].GetComponent<BorderScript>().x = x; bordersCross[x, y].GetComponent<BorderScript>().y = y;
-			}
-		}
-        */
-		/*
-	}
-	*/
 
 	public void SetCurrentBuildingPrefab(string name) {
 		currentBuildingPrefab = buildings[name];
@@ -300,16 +249,17 @@ public class GameManagerScript : MonoBehaviour {
 		placeBuilding = 1;
         buildingGhost = new GameObject();
         buildingGhost.transform.SetParent(threedeeworld, false);
-        GameObject spriteGhost = new GameObject();
-        GridObjectRendererScript renderer = buildingGhost.AddComponent<GridObjectRendererScript>();
-        renderer.SetData(currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data);
-        renderer.CreateRenderers(spriteGhost, buildingGhost);
-        renderer.SetPosition(mouseTileX, mouseTileY);
-		if (renderer.data.sizeX == renderer.data.sizeY) buildingGhostRotate = false;
-		if (buildingGhostRotate) renderer.Flip();
-        //buildingGhost = Instantiate(currentBuildingPrefab, new Vector3((mouseTileX - mouseTileY) * 0.5f, (mouseTileX + mouseTileY) * .25f, -10), Quaternion.identity);
-        //buildingGhost.GetComponent<SpriteRenderer>().color = transparentColor;
-        audioManager.PlaySFX("click01", 0.25f);
+		GridObjectRendererScript.CreateRenderer(buildingGhost, currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data, mouseTileX, mouseTileY, buildingGhostRotate);
+		//GameObject spriteGhost = new GameObject();
+		//GridObjectRendererScript renderer = buildingGhost.AddComponent<GridObjectRendererScript>();
+		//renderer.SetData(currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data);
+		//renderer.CreateRenderers(spriteGhost, buildingGhost);
+		//renderer.SetPosition(mouseTileX, mouseTileY);
+		//if (renderer.data.sizeX == renderer.data.sizeY) buildingGhostRotate = false;
+		//if (buildingGhostRotate) renderer.Flip();
+		//buildingGhost = Instantiate(currentBuildingPrefab, new Vector3((mouseTileX - mouseTileY) * 0.5f, (mouseTileX + mouseTileY) * .25f, -10), Quaternion.identity);
+		//buildingGhost.GetComponent<SpriteRenderer>().color = transparentColor;
+		audioManager.PlaySFX("click01", 0.25f);
 
 		BuildingAreaDisplayScript prefabArea = currentBuildingPrefab.GetComponent<BuildingAreaDisplayScript>();
 		if (prefabArea != null) {

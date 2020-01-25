@@ -37,6 +37,17 @@ public class GridObjectRendererScript : MonoBehaviour
         }
     }
 
+    public static GameObject CreateRenderer(GameObject rendererObject, GridObjectRendererData data, int x, int y, bool flip) {
+        GameObject spriteGhost = new GameObject();
+        GridObjectRendererScript renderer = rendererObject.AddComponent<GridObjectRendererScript>();
+        renderer.SetData(data);
+        renderer.CreateRenderers(spriteGhost, rendererObject);
+        renderer.SetPosition(x, y);
+        if (flip) renderer.Flip();
+
+        return rendererObject;
+    }
+
     public void SetData(GridObjectRendererData data) {
         this.data = data;
     }
