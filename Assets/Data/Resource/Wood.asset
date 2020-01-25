@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 373a0c2d792fafa4993a81ffba93bae4, type: 3}
+  m_Name: Wood
+  m_EditorClassIdentifier: 
+  resourceName: Wood
+  stackSize: 4
+  spriteAtlas: {fileID: 2800000, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
+  modelFile: {fileID: -927199367670048503, guid: 505c2ca4e3d2f934291f6c701e07488c,
+    type: 3}
+  color: {r: 0.8666667, g: 0.7372549, b: 0.5529412, a: 1}
+  icon: {fileID: 21300000, guid: e98263f744e818e4ea28ba4c4363fda1, type: 3}
+  iconShort: {fileID: 21300000, guid: 883630d8e083e1a489159a6eae4e10db, type: 3}
+  type: 0

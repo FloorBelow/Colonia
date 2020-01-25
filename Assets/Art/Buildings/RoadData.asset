@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0c4562943b7254ca84dbb15a08ef33, type: 3}
+  m_Name: RoadData
+  m_EditorClassIdentifier: 
+  spriteNorm: {fileID: 3981893331787388613, guid: 9171b732bf44a4243995fadc83cd7734,
+    type: 3}
+  sprites:
+  - {fileID: -1771956003596224141, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: 8341091881766010338, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -8210266596367970737, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -3919722424692894132, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: 2454897929179658719, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -4580383320677824059, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: 6970626263259159705, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -2399731967662506177, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -4344444976975901513, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: 4727427365499881094, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -53296642798790656, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -8186500176789537627, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: 8597147247726868200, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -3967945997516480614, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -8264570459762306425, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  - {fileID: -9188668571884848467, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
+  model: {fileID: 0}
+  sizeX: 1
+  sizeY: 1
+  sizeZ: 1
+  spriteOverlay: {fileID: 0}
+  isTerrainOnly: 0

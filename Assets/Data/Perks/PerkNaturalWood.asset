@@ -1,0 +1,20 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f2b457b9204bd6d478dc2edb2e685fa7, type: 3}
+  m_Name: PerkNaturalWood
+  m_EditorClassIdentifier: 
+  perkName: Clay
+  icon: {fileID: 21300000, guid: e98263f744e818e4ea28ba4c4363fda1, type: 3}
+  iconColor: {fileID: 11400000, guid: 877453525c16bda4b8dda06530fc6e59, type: 2}
+  buildingUnlocks:
+  - {fileID: 1101187664243718, guid: 4f6f28f3f1e4bce4e8fd9e180990666a, type: 3}
+  requiredTypes: 0100000002000000

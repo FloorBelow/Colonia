@@ -1,0 +1,31 @@
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class RegionHouseCounterPanelScript : MonoBehaviour
+{
+	public Image populationImage;
+	public TMPro.TextMeshProUGUI populationCounter;
+	public Button upgradeButton;
+	public GameObject[] needCounters;
+
+	public void UpdateHouseCounter(RegionScript region) {
+		int[] values = region.GetLevelUp();
+		int pop = region.regionType.levelUpRequirement.population;
+		populationCounter.text = region.GetPopulation().ToString();
+		upgradeButton.interactable = values[0] == 1;
+		for(int i = 0; i < needCounters.Length; i++) {
+			if (i < values.Length - 1) {
+				needCounters[i].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = string.Format("{0}/{1}", values[i + 1], pop);
+				needCounters[i].transform.GetChild(1).GetComponent<Image>().fillAmount = values[i + 1] / (float)pop;
+				if(i != 0) {
+					Image icon = needCounters[i].transform.GetChild(2).GetComponent<Image>();
+					icon.sprite = region.regionType.levelUpRequirement.needs[i - 1].icon;
+					icon.color = region.regionType.levelUpRequirement.needs[i - 1].color;
+				}
+				needCounters[i].SetActive(true);
+			} else needCounters[i].SetActive(false);
+		}
+	}
+}

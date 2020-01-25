@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a0c4562943b7254ca84dbb15a08ef33, type: 3}
+  m_Name: FountainData
+  m_EditorClassIdentifier: 
+  spriteNorm: {fileID: 21300000, guid: 2d356deecc74fc64db023fbbc4a6ad47, type: 3}
+  sprites: []
+  model: {fileID: -4406081790863063646, guid: f709d5359219eb54683a201f658ff387, type: 3}
+  sizeX: 1
+  sizeY: 1
+  sizeZ: 1
+  spriteOverlay: {fileID: 0}
+  isTerrainOnly: 0

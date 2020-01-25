@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1977347515211646
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4182196019513662}
+  - component: {fileID: 1688817735856940866}
+  - component: {fileID: 1357197320468344056}
+  - component: {fileID: 650542031772630234}
+  m_Layer: 0
+  m_Name: RoadPrefab
+  m_TagString: Road
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4182196019513662
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977347515211646}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1688817735856940866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977347515211646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3a4a7f70cd2148746bb0107f8d2e7b09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  keywords: []
+--- !u!114 &1357197320468344056
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977347515211646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bd068f2294394ab4fa0b50a63d0cb299, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  data: {fileID: 11400000, guid: 9af68ebbb7c17974f8fc63e472fcb019, type: 2}
+  fadeData: {fileID: 0}
+  x: 0
+  y: 0
+  z: 0
+  spriteObject: {fileID: 0}
+  modelObject: {fileID: 0}
+  flip: 0
+  objectsBehindMe: []
+  visited: 0
+  connectionFlags: 0
+--- !u!114 &650542031772630234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1977347515211646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06cd8903210eaa444ac91ead41fe1027, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buildingName: Road
+  sizeX: 1
+  sizeY: 1
+  sizeZ: 1
+  icon: {fileID: 11400000, guid: e3b64908407d8ea488d05041a06d3661, type: 2}
+  resources: []
+  resourceCounts: 
+  x: 0
+  y: 0
+  flip: 0
+  currentSpriteIndex: 0
+  map: {fileID: 0}

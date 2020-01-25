@@ -1,0 +1,26 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8698d9c81b85a64299a7eed8692e8f0, type: 3}
+  m_Name: RegionTypeRuralLevel0
+  m_EditorClassIdentifier: 
+  regionName: Rural
+  type: 1
+  icon: {fileID: 21300000, guid: 07ef463a2b145b74883ca2c822005b40, type: 3}
+  iconColor: {fileID: 11400000, guid: 354ec0beb7023ea41b10318e0a38f179, type: 2}
+  outlineColor: {fileID: 11400000, guid: 8b82eb96a19c3e24a90319fccdecbfd2, type: 2}
+  buildingUnlocks:
+  - {fileID: 1977347515211646, guid: 49087e598b7d2d7408e74e327aa3cb06, type: 3}
+  - {fileID: 1679998595150926, guid: 70e64af8826d08d46a985f7b5e3cd982, type: 3}
+  - {fileID: 1679998595150926, guid: ebb3724d60aa282468e52c19e73c4fab, type: 3}
+  - {fileID: 1977347515211646, guid: 49087e598b7d2d7408e74e327aa3cb06, type: 3}
+  upgrade: {fileID: 0}
+  levelUpRequirement: {fileID: 11400000, guid: a7360efcb3140b84aa26ea0b3f99d732, type: 2}
