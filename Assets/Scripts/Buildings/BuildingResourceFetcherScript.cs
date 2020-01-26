@@ -34,7 +34,7 @@ public class BuildingResourceFetcherScript : BuildingJobScript
 		buildingScript = gameObject.GetComponent<BuildingScript>();
 		storage = gameObject.GetComponent<ResourceStorageScript>();
 		//fetcher = Instantiate(fetcherPrefab, GetComponent<GridObjectRendererScript>().spriteObject.transform).GetComponent<WalkerScript>();
-		fetcher = Instantiate(fetcherPrefab, GameManagerScript.m.threedeeworld).GetComponent<WalkerScript>();
+		fetcher = Instantiate(fetcherPrefab, GameManagerScript.m.modelPivot).GetComponent<WalkerScript>();
 		fetcher.Init(buildingScript.map);
 		//fetcher.gameObject.SetActive(false);
 	}

@@ -66,7 +66,7 @@ public class MapScript : MonoBehaviour {
 				if (path != null) {
 					//Debug.Log("new immigrant arriving");
 					//WalkerScript immigrant = Instantiate(GameManagerScript.m.immigrantWalkerPrefab, new Vector3(-16.5f, 7.75f, 0), Quaternion.identity).GetComponent<WalkerScript>();
-					WalkerScript immigrant = Instantiate(GameManagerScript.m.immigrantWalkerPrefab, GameManagerScript.m.threedeeworld).GetComponent<WalkerScript>();
+					WalkerScript immigrant = Instantiate(GameManagerScript.m.immigrantWalkerPrefab, GameManagerScript.m.modelPivot).GetComponent<WalkerScript>();
 					immigrant.Init(this);
 					immigrant.AddJob(new WalkerScript.JobWalk(immigrant, path));
 					immigrant.AddJob(new WalkerScript.JobAddPopulation(immigrant, house));
@@ -120,57 +120,10 @@ public class MapScript : MonoBehaviour {
 		workersRequired = w;
 	}
 
-	/*
-    public void CreateTiles(GameObject tilePrefab, int sizeX, int sizeY, int startX, int startY) {
-		bongos = new TileScript[sizeX*sizeY];
-        for (int x = 0; x < sizeX; x++) {
-            for (int y = 0; y < sizeY; y++) {
-                CreateTile(tilePrefab, x, y, startX, startY);
-            }
-        }
-    }
-
-
-	public void CreateTiles(GameObject tilePrefab, int x, int y) {
-		CreateTiles(tilePrefab, x, y, 0, 0);
-	}
-
-
-	void CreateTile(GameObject tilePrefab, int x, int y, int startX, int startY) {
-		GameObject newTile = Instantiate(tilePrefab, this.transform.position + TileToPosition(x + startX, y + startY, 0),
-										 Quaternion.identity, this.transform);
-		newTile.transform.name = ("Tile " + x + ", " + y);
-		bongos[x + y * sizeX] = newTile.GetComponent<TileScript>();
-	}
-	*/
-
-	//NEW AND IMPROVED
-	/*
-	public void CreateTiles() {
-		tiles = new TileScript[sizeX * sizeY];
-		Transform tileParent = new GameObject("Tiles").transform; tileParent.SetParent(transform);
-		GameObject prefab = Resources.Load<GameObject>("TerrainTilePrefab");
-		for (int x = 0; x < sizeX; x++) {
-			for (int y = 0; y < sizeY; y++) {
-				CreateTile(prefab, tileParent, x, y);
-			}
-		}
-	}
-	*/
-
 	//HoLY SHIT
 	public void CreateTiles() {
 		tiles = new Tile[sizeX * sizeY];
 	}
-
-	/*
-	void CreateTile(GameObject prefab, Transform parent, int x, int y) {
-		Transform newTile = Instantiate(prefab, parent).transform;
-		newTile.localPosition = TileToPosition(x, y, 0);
-		newTile.name = ("Tile " + x + ", " + y);
-		bongos[x + y * sizeX] = newTile.gameObject.GetComponent<TileScript>();
-	}
-	*/
 
 	//Probably should be put into a static helper class somewhere
 	public static Vector3 TileToPosition(int x, int y, int depthOffset) {
@@ -181,6 +134,8 @@ public class MapScript : MonoBehaviour {
 		return TileToPosition(x, y, 0);
 	}
 
+
+	//TODO kind of a problem that this uses renderers rather than buildingscripts. some stuff with building ghost to sort out
 	public bool CheckClearToBuild(int x, int y, GameObject buildingPrefab) {
 
 		GridObjectRendererScript renderer = buildingPrefab.GetComponent<GridObjectRendererScript>();
@@ -201,7 +156,7 @@ public class MapScript : MonoBehaviour {
 	}
 
     public GameObject PlaceBuilding(GameObject prefab, int x, int y, bool flip = false, bool sortSprites = true) {
-        GameObject newBuilding = Instantiate(prefab, GameManagerScript.m.threedeeworld);
+        GameObject newBuilding = Instantiate(prefab, GameManagerScript.m.modelPivot);
 
 		buildings.Add(newBuilding);
 
@@ -269,9 +224,6 @@ public class MapScript : MonoBehaviour {
 		*/
 		//UNSAFE FOR MULTIPLE DISTRICT TYPES
 		//((DistrictResidentialScript)district).UpdateNeeds();
-
-
-
 		return newBuilding;
     }
 
@@ -417,7 +369,7 @@ public class MapScript : MonoBehaviour {
 		for(int i = buildings.Count - 1; i >= 0; i--) {
 			DestroyImmediate(buildings[i]);
 		}
-		foreach (WalkerScript walker in GameManagerScript.m.threedeeworld.GetComponentsInChildren<WalkerScript>()) {
+		foreach (WalkerScript walker in GameManagerScript.m.modelPivot.GetComponentsInChildren<WalkerScript>()) {
 			DestroyImmediate(walker.gameObject);
 		}
 		buildings.Clear();

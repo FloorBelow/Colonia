@@ -9,6 +9,8 @@ public class AudioMangagerScript : MonoBehaviour {
         public string key;
         public AudioClip value;
     }
+    [SerializeField]
+    AudioClip[] clicks;
     public AudioClip building01Test;
     public soundDictionaryItem[] sfxItems;
     Dictionary<string, AudioClip> sfx;
@@ -29,8 +31,15 @@ public class AudioMangagerScript : MonoBehaviour {
         //source.PlayOneShot(sfx["building01"], 1.0f);
     }
 
+    public void Click(int i, float volume = .25f) {
+        source.PlayOneShot(clicks[i], volume);
+    }
 
-	public void PlaySFX(string sfxID, float volume) {
+    public void Click() {
+        Click(1, .25f);
+    }
+
+    public void PlaySFX(string sfxID, float volume) {
         source.PlayOneShot(sfx[sfxID], volume);
     }
 

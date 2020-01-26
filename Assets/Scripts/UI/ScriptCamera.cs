@@ -19,8 +19,8 @@ public class ScriptCamera : MonoBehaviour {
 		else {
 			modelCamObject.SetActive(false);
 			quad.SetActive(false);
-			GameManagerScript.m.threedeeworld.GetChild(0).gameObject.SetActive(false);
-			GameManagerScript.m.threedeeworld.GetChild(1).gameObject.SetActive(false);
+			GameManagerScript.m.modelPivot.GetChild(0).gameObject.SetActive(false);
+			GameManagerScript.m.modelPivot.GetChild(1).gameObject.SetActive(false);
 		}
         UpdateCamSize();
     }

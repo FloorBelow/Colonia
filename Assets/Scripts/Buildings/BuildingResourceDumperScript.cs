@@ -66,7 +66,7 @@ public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 		storage = gameObject.GetComponent<ResourceStorageScript>();
 		resource = GameManagerScript.m.resources[resourceToDump];
 		//dumper = Instantiate(walkerPrefab, GetComponent<GridObjectRendererScript>().spriteObject.transform).GetComponent<WalkerScript>();
-		dumper = Instantiate(walkerPrefab, GameManagerScript.m.threedeeworld).GetComponent<WalkerScript>();
+		dumper = Instantiate(walkerPrefab, GameManagerScript.m.modelPivot).GetComponent<WalkerScript>();
 		dumper.Init(buildingScript.map);
 		buildingScript.map.updateQueue.Enqueue(this);
 	}

@@ -4,8 +4,9 @@ using UnityEngine;
 using System.IO;
 public class GameManagerScript : MonoBehaviour {
 
-	public bool mobile;
-	public bool debugMode;
+	
+
+
 
     //Let's fuck over everything by removing regions and borders
     //Or at least, make regions like full maps
@@ -17,9 +18,11 @@ public class GameManagerScript : MonoBehaviour {
 
     //Singleton time babey
     public static GameManagerScript m;
-	public Transform threedeeworld;
+	[Header("Game Data")]
 
-    public Material modelMat; //sorry
+	public Transform modelPivot;
+
+
 
     //shit now i wanna make this all scriptableobjects
     //probably ill learn when to use scriptableobjects vs managers better sometime also nice that the word scriptableobject lined up right there
@@ -38,22 +41,27 @@ public class GameManagerScript : MonoBehaviour {
     public Dictionary<string, GameObject> buildings;
     public Dictionary<string, ResourceData> resources;
 
-	public GameObject regionPrefab;
 	public GameObject immigrantWalkerPrefab;
 
-	public int regionSize;
 
-	public Color transparentColor;
-	public Color transparentRedColor;
-	public Material outlineMat;
+
 
 	//should make a dictionary of keywords, too?
 	public Keyword resourceStoreKeyword;
 
 	public GameObject startingMap;
 
+	[Header("Art Stuff")]
+	public Material modelMat; //sorry
+	public Material outlineMat;
+	public Color transparentColor;
+	public Color transparentRedColor;
 
 	[Header("Instance Variables")]
+
+	public bool mobile;
+	public bool debugMode;
+
 	public MapScript activeMap;
 
 	public int mouseTileX;
@@ -64,17 +72,11 @@ public class GameManagerScript : MonoBehaviour {
 
 
 	public GameObject selectedObject;
-	public GameObject selectedBorder;
-	public int selectedBorderX;
-	public int selectedBorderY;
 
     public GameObject currentBuildingPrefab;
-	public int currentBuildingIndex;
 	public GameObject buildingGhost;
 	public bool buildingGhostRotate;
 	public int placeBuilding;//0 - default; 1 - placing building
-
-	public bool placeBorder;
 
 	void Awake() {
 		m = this;
@@ -139,7 +141,7 @@ public class GameManagerScript : MonoBehaviour {
 			buildingGhost.GetComponent<GridObjectRendererScript>().SetPosition(x, y);
 			BuildingAreaDisplayScript area = buildingGhost.GetComponent<BuildingAreaDisplayScript>();
 			if (area != null) { area.DestroyRadiusDisplay(); area.CreateRadiusDisplay(); }
-			if (activeMap.CheckClearToBuild(mouseTileX, mouseTileY, buildingGhost)) {
+			if (activeMap.CheckClearToBuild(x, y, buildingGhost)) {
 				buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
 			} else {
 				buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
@@ -157,14 +159,6 @@ public class GameManagerScript : MonoBehaviour {
 			} else {
 				PlaceBuilding(mouseTileX, mouseTileY);
 			}
-        /*
-		} else if (mouseTileX - activeRegionX >= regionSize || mouseTileY - activeRegionY >= regionSize || placeBorder) {
-			Debug.Log("Place road?");
-			int[] activeBorderCoords = FindActiveBorder();
-			if(selectedBorder == null || bordersCross[activeBorderCoords[0], activeBorderCoords[1]] != selectedBorder && bordersCross[activeBorderCoords[0], activeBorderCoords[1]] != null) {
-				SelectBorder(activeBorderCoords[0], activeBorderCoords[1]);
-			}
-            */
 		} else {
 			SelectBuilding(activeMap.GetTile(mouseTileX, mouseTileY).building);
 			RegionScript newSelectedRegion = (activeMap.GetTile(mouseTileX, mouseTileY).region);
@@ -174,6 +168,7 @@ public class GameManagerScript : MonoBehaviour {
 				selectedRegion.UpdateAllowedBuildings();
 				uiManager.SetRegionPanel(selectedRegion);
 				CreateRegionOutline();
+				audioManager.Click();
 			}
 		}
 
@@ -193,14 +188,8 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	public void RightClick(bool isMouseOverUI) {
-		if (placeBuilding == 1) {
-			RemoveBuildingGhost();
-		} else if (placeBorder) {
-			selectedBorder = null;
-			placeBorder = false;
-		} else {
-			RemoveBuilding(mouseTileX, mouseTileY);
-		}
+		if (placeBuilding == 1) RemoveBuildingGhost();
+		else RemoveBuilding(mouseTileX, mouseTileY);
 	}
 
 	public void MiddleClick(bool isMouseOverUI) {
@@ -208,24 +197,6 @@ public class GameManagerScript : MonoBehaviour {
 			RotateBuildingGhost();
 		}
 	}
-
-	/*
-	private void FindActiveRegion() {
-		int x = mouseTileX; int y = mouseTileY;
-		int regionX = x / (regionSize + borderSize);
-		int regionY = y / (regionSize + borderSize);
-		if (regionX >= 0 && regionY >= 0 && regionX <= world.GetUpperBound(0) && regionY < world.GetUpperBound(1)) {
-			SelectRegion(regionX, regionY);
-			uiManager.SetRegionInfoPanel(activeRegion);
-		}
-	}
-	
-
-	public void SelectRegion(int x, int y) {
-		activeRegion = world[x, y];
-		activeRegionX = x * (regionSize + borderSize); activeRegionY = y * (regionSize + borderSize);
-	}
-	*/
 
 	string IntToRoman(int i) {
 		int[] dec = new int[] { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
@@ -248,25 +219,18 @@ public class GameManagerScript : MonoBehaviour {
 	public void CreateBuildingGhost() {
 		placeBuilding = 1;
         buildingGhost = new GameObject();
-        buildingGhost.transform.SetParent(threedeeworld, false);
+        buildingGhost.transform.SetParent(modelPivot, false);
 		GridObjectRendererScript.CreateRenderer(buildingGhost, currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data, mouseTileX, mouseTileY, buildingGhostRotate);
-		//GameObject spriteGhost = new GameObject();
-		//GridObjectRendererScript renderer = buildingGhost.AddComponent<GridObjectRendererScript>();
-		//renderer.SetData(currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data);
-		//renderer.CreateRenderers(spriteGhost, buildingGhost);
-		//renderer.SetPosition(mouseTileX, mouseTileY);
-		//if (renderer.data.sizeX == renderer.data.sizeY) buildingGhostRotate = false;
-		//if (buildingGhostRotate) renderer.Flip();
-		//buildingGhost = Instantiate(currentBuildingPrefab, new Vector3((mouseTileX - mouseTileY) * 0.5f, (mouseTileX + mouseTileY) * .25f, -10), Quaternion.identity);
-		//buildingGhost.GetComponent<SpriteRenderer>().color = transparentColor;
-		audioManager.PlaySFX("click01", 0.25f);
-
+		if (activeMap.CheckClearToBuild(mouseTileX, mouseTileY, buildingGhost)) buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
+		else buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
 		BuildingAreaDisplayScript prefabArea = currentBuildingPrefab.GetComponent<BuildingAreaDisplayScript>();
 		if (prefabArea != null) {
 			BuildingAreaDisplayScript area = buildingGhost.AddComponent<BuildingAreaDisplayScript>();
 			area.SetData(prefabArea.radius, prefabArea.tileHighlightPrefab, activeMap.sizeX, activeMap.sizeY);
 			area.CreateRadiusDisplay();
 		}
+
+		audioManager.Click(1);
 	}
 
 	public void RotateBuildingGhost() {
@@ -275,7 +239,7 @@ public class GameManagerScript : MonoBehaviour {
 			buildingGhostRotate = !buildingGhostRotate;
 			renderer.Flip();
 			//buildingGhost.GetComponent<BuildingScript>().Flip();
-			audioManager.PlaySFX("click01", 0.25f);
+			audioManager.Click(1);
 		}
 	}
 
