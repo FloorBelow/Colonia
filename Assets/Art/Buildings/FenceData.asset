@@ -14,10 +14,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteNorm: {fileID: 366504733585134385, guid: 7890c76b1f70a3340afb06e0c7d1e7e0,
     type: 3}
-  sprites: []
+  spriteOverlay: {fileID: 0}
+  sprites:
+  - {fileID: 366504733585134385, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -6836309858474030347, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 8681050038124266478, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 6245496242904349466, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -735658519694676078, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 6639723847112840818, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -6740974534372461131, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 3547877667308449173, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 7882684144620323348, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -6486554195357087207, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -908595831401080129, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -343602037244582335, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -2200818694364736675, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: -648546863890333958, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 8986475461627476065, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
+  - {fileID: 3427846969359575989, guid: 7890c76b1f70a3340afb06e0c7d1e7e0, type: 3}
   model: {fileID: 0}
   sizeX: 1
   sizeY: 1
   sizeZ: 1
-  spriteOverlay: {fileID: 0}
   isTerrainOnly: 0

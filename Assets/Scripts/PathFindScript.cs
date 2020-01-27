@@ -73,8 +73,59 @@ public static class PathFindScript
         return null;
     }
 
+    /*
+    static bool Expand(int i, int endIndex, int currentLocation, Dictionary<int, PathfindNode> nodes) {
+        if (i == endIndex) {
+            PathfindNode endNode = new PathfindNode(i, nodes[currentLocation].distance + 1, nodes[currentLocation], true);
+            return endNode.ReturnPath(false);
+        } else if (!nodes.ContainsKey(i)) {  //NEED TO UPDATE FOR COSTS LATER
+            nodes[i] = new PathfindNode(i, nodes[currentLocation].distance + 1, nodes[currentLocation], leftStart);
+            frontier.Enqueue(i);
+        }
+    }
+    */
 
-	/*
+
+
+    public static int[] PathfindNew(MapScript map, int startX, int startY, int endX, int endY) {
+        Debug.Log(System.String.Format("Pathfinding from {0},{1} to {2},{3}", startX, startY, endX, endY));
+        return PathfindNew(map, startX + startY * map.sizeX, endX + endY * map.sizeX);
+    }
+
+    public static int[] PathfindNew(MapScript map, int startIndex, int endIndex) {
+        int[] parent = new int[map.sizeX * map.sizeY];
+        Queue<int> frontier = new Queue<int>();
+        frontier.Enqueue(startIndex);
+        while(frontier.Count > 0) {
+            int i = frontier.Dequeue();
+            if (i == endIndex) {
+                Debug.Log("found path");
+                List<int> path = new List<int>();
+                path.Add(i);
+                while(i != startIndex) {
+                    i = parent[i];
+                    path.Add(i);
+                }
+                path.Reverse();
+                return path.ToArray();
+            }
+            if (i % map.sizeX != map.sizeX - 1) ExpandNew(i + 1, i, parent, frontier);
+            if (i % map.sizeX != 0)             ExpandNew(i - 1, i, parent, frontier);
+            if (i / map.sizeX != map.sizeY - 1) ExpandNew(i + map.sizeX, i, parent, frontier);
+            if (i / map.sizeX != 0)             ExpandNew(i - map.sizeX, i, parent, frontier);
+        }
+        return new int[0];
+    }
+
+    public static void ExpandNew(int i, int oldI, int[] parent, Queue<int> frontier) {
+        if (parent[i] != 0) return;
+        parent[i] = oldI;
+        frontier.Enqueue(i);
+    }
+
+
+
+    /*
     static int CheckRoad(MapScript map, int i, int endIndex, Dictionary<int, PathfindNode> nodes)
     {
         if (i == endIndex)
@@ -87,7 +138,7 @@ public static class PathFindScript
         }
         return 0;//FOUND ??
     }
-	*/
+    */
 
     static bool IsRoad(MapScript map, int i, GameObject startBuilding, GameObject endBuilding, bool parentLeftStart, out bool leftStart) {
 		GameObject building = map.GetTile(i % map.sizeX, i / map.sizeX).building;

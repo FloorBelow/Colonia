@@ -5,6 +5,7 @@ using UnityEngine;
 public class GridObjectConnectedRendererScript : GridObjectRendererScript
 {
 	public int connectionFlags;
+	bool nocenter;
 
 	//Needs to be on a building
     public override void SetPosition(int x, int y, int z = 0) {
@@ -60,7 +61,16 @@ public class GridObjectConnectedRendererScript : GridObjectRendererScript
 	public void UpdateConnectedSprite(int i) {
 		connectionFlags += i;
 		//Debug.Log(connectionFlags);
-		if(spriteObject != null) spriteObject.GetComponent<SpriteRenderer>().sprite = data.sprites[connectionFlags];
+
+		if (spriteObject != null) {
+			if (connectionFlags >= data.sprites.Length) {
+				spriteObject.GetComponent<SpriteRenderer>().enabled = false;
+			} else {
+				spriteObject.GetComponent<SpriteRenderer>().enabled = true;
+				spriteObject.GetComponent<SpriteRenderer>().sprite = data.sprites[connectionFlags];
+			}
+		}
+
 	}
 
 	// Update is called once per frame

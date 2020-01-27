@@ -74,9 +74,17 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject selectedObject;
 
     public GameObject currentBuildingPrefab;
-	public GameObject buildingGhost;
+	GameObject buildingGhost;
+	List<RoadGhost> roadGhosts;
 	public bool buildingGhostRotate;
-	public int placeBuilding;//0 - default; 1 - placing building
+
+	public enum ControlState {
+		Free,
+		PlaceBuilding,
+		PlaceRoad,
+		PlaceRoadSegment
+	}
+	public ControlState controlState;
 
 	void Awake() {
 		m = this;
@@ -104,7 +112,7 @@ public class GameManagerScript : MonoBehaviour {
         inputManager.gameManager = this;
         audioManager = gameObject.GetComponent<AudioMangagerScript>();
 
-		placeBuilding = 0;
+		controlState = ControlState.Free;
 		buildingGhostRotate = false;
 
 		activeMap = startingMap.GetComponent<MapScript>();
@@ -137,7 +145,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void OnMouseTileChange(int x, int y) {
-		if(placeBuilding == 1) {
+		if(controlState == ControlState.PlaceBuilding) {
 			buildingGhost.GetComponent<GridObjectRendererScript>().SetPosition(x, y);
 			BuildingAreaDisplayScript area = buildingGhost.GetComponent<BuildingAreaDisplayScript>();
 			if (area != null) { area.DestroyRadiusDisplay(); area.CreateRadiusDisplay(); }
@@ -146,6 +154,11 @@ public class GameManagerScript : MonoBehaviour {
 			} else {
 				buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
 			}
+		} else if(controlState == ControlState.PlaceRoad) {
+			roadGhosts[0].sprite.transform.position = MapScript.TileToPosition(x, y);
+			roadGhosts[0] = new RoadGhost(roadGhosts[0].sprite, x, y);
+		} else if(controlState == ControlState.PlaceRoadSegment) {
+			PlaceRoadSegmentOnMouseTileChange(x, y);
 		}
 	}
 
@@ -153,12 +166,17 @@ public class GameManagerScript : MonoBehaviour {
 
 	//Input
 	public void LeftClick(bool isMouseOverUI) {
-		if (placeBuilding == 1) {
+		if (controlState == ControlState.PlaceBuilding) {
 			if (isMouseOverUI) {
 				RemoveBuildingGhost();
 			} else {
 				PlaceBuilding(mouseTileX, mouseTileY);
 			}
+		} else if (controlState == ControlState.PlaceRoad) {
+			StartPlaceRoadSegment();
+			audioManager.Click();
+		} else if (controlState == ControlState.PlaceRoadSegment) {
+			PlaceRoadSegment();
 		} else {
 			SelectBuilding(activeMap.GetTile(mouseTileX, mouseTileY).building);
 			RegionScript newSelectedRegion = (activeMap.GetTile(mouseTileX, mouseTileY).region);
@@ -188,12 +206,15 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	public void RightClick(bool isMouseOverUI) {
-		if (placeBuilding == 1) RemoveBuildingGhost();
+		audioManager.Click();
+		if (controlState == ControlState.PlaceBuilding) RemoveBuildingGhost();
+		else if (controlState == ControlState.PlaceRoad) ExitBuildRoad();
+		else if (controlState == ControlState.PlaceRoadSegment) StopPlaceRoadSegment();
 		else RemoveBuilding(mouseTileX, mouseTileY);
 	}
 
 	public void MiddleClick(bool isMouseOverUI) {
-		if (placeBuilding == 1) {
+		if (controlState == ControlState.PlaceBuilding) {
 			RotateBuildingGhost();
 		}
 	}
@@ -213,11 +234,12 @@ public class GameManagerScript : MonoBehaviour {
 
 	public void SetCurrentBuildingPrefab(string name) {
 		currentBuildingPrefab = buildings[name];
+		if (buildingGhost != null) RemoveBuildingGhost();
 		CreateBuildingGhost();
 	}
 
 	public void CreateBuildingGhost() {
-		placeBuilding = 1;
+		controlState = ControlState.PlaceBuilding;
         buildingGhost = new GameObject();
         buildingGhost.transform.SetParent(modelPivot, false);
 		GridObjectRendererScript.CreateRenderer(buildingGhost, currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data, mouseTileX, mouseTileY, buildingGhostRotate);
@@ -246,7 +268,7 @@ public class GameManagerScript : MonoBehaviour {
 	public void RemoveBuildingGhost() {
 		Destroy(buildingGhost);
 		buildingGhostRotate = false;
-		placeBuilding = 0;
+		controlState = ControlState.Free;
 	}
 
     public void PlaceBuilding() {
@@ -300,5 +322,68 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 
+	struct RoadGhost {
+		public GameObject sprite;
+		public int x; public int y;
+		public RoadGhost(GameObject sprite, int x, int y) {
+			this.sprite = sprite; this.x = x; this.y = y;
+		}
+	}
+
+	public void EnterBuildRoad() {
+		if(controlState == ControlState.PlaceBuilding) RemoveBuildingGhost();
+		controlState = ControlState.PlaceRoad;
+		if(roadGhosts == null) roadGhosts = new List<RoadGhost>();
+		roadGhosts.Add(CreateRoadGhost(mouseTileX, mouseTileY));
+	}
+
+	void ExitBuildRoad() {
+		foreach (RoadGhost o in roadGhosts) Destroy(o.sprite);
+		roadGhosts.Clear();
+		controlState = ControlState.Free;
+	}
+
+	void PlaceRoadSegmentOnMouseTileChange(int x, int y) {
+		int[] path = PathFindScript.PathfindNew(activeMap, roadGhosts[0].x, roadGhosts[0].y, x, y);
+		if(path != null) {
+			for (int i = 0; i < roadGhosts.Count; i++) {
+				Destroy(roadGhosts[i].sprite);
+			}
+			roadGhosts.Clear();
+			for (int i = 0; i < path.Length; i++) {
+				if(activeMap.tiles[path[i]].building == null) roadGhosts.Add(CreateRoadGhost(path[i] % activeMap.sizeX, path[i] / activeMap.sizeX));
+			}
+		}
+	}
+
+	void PlaceRoadSegment() {
+		foreach(RoadGhost g in roadGhosts) {
+			activeMap.PlaceBuilding(buildings["Road"], g.x, g.y, false, false);
+		}
+		activeMap.SortSprites();
+		audioManager.PlaySFX("build01", 0.5f);
+		StopPlaceRoadSegment();
+	}
+
+	void StartPlaceRoadSegment() {
+		controlState = ControlState.PlaceRoadSegment;
+	}
+
+	void StopPlaceRoadSegment() {
+		for(int i = 1; i < roadGhosts.Count; i++) {
+			Destroy(roadGhosts[i].sprite);
+		}
+		roadGhosts.RemoveRange(1, roadGhosts.Count - 1);
+		controlState = ControlState.PlaceRoad;
+	}
+
+	RoadGhost CreateRoadGhost(int x, int y) {
+		GameObject road = new GameObject();
+		road.transform.position = MapScript.TileToPosition(x, y);
+		SpriteRenderer s = road.AddComponent<SpriteRenderer>();
+		s.sprite = buildings["Road"].GetComponent<GridObjectRendererScript>().data.sprites[0];
+		s.color = transparentColor;
+		return new RoadGhost(road, x, y);	
+	}
 
 }
