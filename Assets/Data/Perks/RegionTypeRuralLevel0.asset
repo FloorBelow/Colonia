@@ -21,6 +21,5 @@ MonoBehaviour:
   - {fileID: 1977347515211646, guid: 49087e598b7d2d7408e74e327aa3cb06, type: 3}
   - {fileID: 1679998595150926, guid: 70e64af8826d08d46a985f7b5e3cd982, type: 3}
   - {fileID: 1679998595150926, guid: ebb3724d60aa282468e52c19e73c4fab, type: 3}
-  - {fileID: 1977347515211646, guid: 49087e598b7d2d7408e74e327aa3cb06, type: 3}
   upgrade: {fileID: 0}
   levelUpRequirement: {fileID: 11400000, guid: a7360efcb3140b84aa26ea0b3f99d732, type: 2}

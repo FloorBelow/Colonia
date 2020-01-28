@@ -8,8 +8,6 @@ public class ResourceScript : InitScript {
     public ResourceData data;
     //SpriteRenderer spriteRenderer;
 	ObjectRendererScript objectRenderer;
-    public Sprite[] sprites;
-	public Mesh[] models;
 
 	//Variables
 	public int count;
@@ -33,10 +31,8 @@ public class ResourceScript : InitScript {
 		gameObject.name = data.resourceName;
 
 		//Renderer shit
-		sprites = Resources.LoadAll<Sprite>(data.spriteAtlas.name);
-		models = Resources.LoadAll<Mesh>(data.modelFile.name);
 		objectRenderer = gameObject.AddComponent<ObjectRendererScript>();
-		objectRenderer.SetData(sprites, models);
+		objectRenderer.SetData(data.sprites, data.models);
 		objectRenderer.CreateRenderers(new GameObject(data.resourceName + " Sprite"), gameObject, transform.parent.GetComponent<GridObjectRendererScript>());
 		//This is okay as long as we only ever create resources as a child of buildings
 		//So like, it isn't okay

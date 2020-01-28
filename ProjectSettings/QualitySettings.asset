@@ -20,7 +20,7 @@ QualitySettings:
     shadowmaskMode: 0
     skinWeights: 4
     textureQuality: 0
-    anisotropicTextures: 2
+    anisotropicTextures: 0
     antiAliasing: 0
     softParticles: 1
     softVegetation: 1
@@ -42,4 +42,6 @@ QualitySettings:
     resolutionScalingFixedDPIFactor: 1
     excludedTargetPlatforms:
     - Android
-  m_PerPlatformDefaultQuality: {}
+  m_PerPlatformDefaultQuality:
+    Android: 0
+    Standalone: 0
