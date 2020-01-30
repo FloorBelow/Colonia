@@ -224,17 +224,17 @@ public class WalkerScript : MonoBehaviour
     public class JobLoadResource : Job {
         ResourceStorageScript storage;
         ResourceStorageScript otherStorage;
-        string name;
+        ResourceData resource;
         float timer;
         int count;
-        public JobLoadResource(WalkerScript walker, ResourceStorageScript otherStorage, string name, int count, float time){
-            this.walker = walker; this.otherStorage = otherStorage; this.name = name; this.count = count; timer = time;
+        public JobLoadResource(WalkerScript walker, ResourceStorageScript otherStorage, ResourceData resource, int count, float time){
+            this.walker = walker; this.otherStorage = otherStorage; this.resource = resource; this.count = count; timer = time;
         }
 
         public override void OnBeginJob() {
             walker.jobDescription = "Loading resource";
             storage = walker.gameObject.GetComponent<ResourceStorageScript>();
-            otherStorage.TransferResource(name, count, storage);
+            otherStorage.TransferResource(resource, count, storage);
             //Debug.Log("Took " + count.ToString() + " " + name + " from destination.");
         }
 
@@ -256,19 +256,19 @@ public class WalkerScript : MonoBehaviour
     {
         ResourceStorageScript storage;
         ResourceStorageScript otherStorage;
-        string name;
+        ResourceData resource;
         float timer;
         int count;
-        public JobUnloadResource(WalkerScript walker, ResourceStorageScript otherStorage, string name, int count, float time)
+        public JobUnloadResource(WalkerScript walker, ResourceStorageScript otherStorage, ResourceData resource, int count, float time)
         {
-            this.walker = walker; this.otherStorage = otherStorage; this.name = name; this.count = count; timer = time;
+            this.walker = walker; this.otherStorage = otherStorage; this.resource = resource; this.count = count; timer = time;
         }
 
         public override void OnBeginJob()
         {
             walker.jobDescription = "Unloading resource";
             storage = walker.gameObject.GetComponent<ResourceStorageScript>();
-            storage.TransferResource(name, count, otherStorage);
+            storage.TransferResource(resource, count, otherStorage);
             //Debug.Log("Placed " + count.ToString() + " " + name + " in destination.");
         }
 

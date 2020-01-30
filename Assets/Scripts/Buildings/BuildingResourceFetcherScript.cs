@@ -5,8 +5,7 @@ using UnityEngine;
 public class BuildingResourceFetcherScript : BuildingJobScript
 {
     //[Header("Base Data")]
-    public string resourceToFetch;
-	ResourceData resource;
+	public ResourceData resourceToFetch;
     public int minToFetch;
     public GameObject fetcherPrefab;
 	[SerializeField]
@@ -30,7 +29,6 @@ public class BuildingResourceFetcherScript : BuildingJobScript
 	}
 
 	public override void Init() {
-		resource = GameManagerScript.m.resources[resourceToFetch];
 		buildingScript = gameObject.GetComponent<BuildingScript>();
 		storage = gameObject.GetComponent<ResourceStorageScript>();
 		//fetcher = Instantiate(fetcherPrefab, GetComponent<GridObjectRendererScript>().spriteObject.transform).GetComponent<WalkerScript>();
@@ -47,7 +45,7 @@ public class BuildingResourceFetcherScript : BuildingJobScript
 				List<int[]> paths = new List<int[]>();
 				List<ResourceStorageScript> otherStores = new List<ResourceStorageScript>();
 				foreach (ResourceStorageScript otherStorage in buildingScript.map.stores) {
-					if (otherStorage != null && otherStorage.gameObject != gameObject && otherStorage.gameObject.HasKeyword(fetchKeywords) && storage.GetSpaceFor(resource) >= minToFetch) {
+					if (otherStorage != null && otherStorage.gameObject != gameObject && otherStorage.gameObject.HasKeyword(fetchKeywords) && storage.GetSpaceFor(resourceToFetch) >= minToFetch) {
 						if (otherStorage.GetCount(resourceToFetch) >= minToFetch) {
 							otherBuildingScript = otherStorage.GetComponent<BuildingScript>();
 							int[] path = PathFindScript.Pathfind(buildingScript.map, buildingScript.x, buildingScript.y, otherBuildingScript.x, otherBuildingScript.y, true);

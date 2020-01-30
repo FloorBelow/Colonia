@@ -5,8 +5,8 @@ using UnityEngine;
 public class ResourceConverterScript : BuildingJobScript {
 
 	public float resourceTime;
-    public string inputName;
-	public string outputName;
+    public ResourceData input;
+	public ResourceData output;
 	ResourceStorageScript storageScript;
 
 	public override void Init() {
@@ -18,21 +18,21 @@ public class ResourceConverterScript : BuildingJobScript {
 	}
 
     IEnumerator ResourceTimer() {
-        while (storageScript.GetCount(inputName) < 1) yield return null;
+        while (storageScript.GetCount(input) < 1) yield return null;
 		float timer = resourceTime;
 		while(timer > 0) {
 			if (isActive) timer -= Time.deltaTime;
 			yield return null;
 		}
         //yield return new WaitForSeconds(resourceTime);
-        while (storageScript.GetCount(inputName) < 1) yield return null;
+        while (storageScript.GetCount(input) < 1) yield return null;
         ConvertResources(1);
         StartCoroutine("ResourceTimer");
     }
 
     public void ConvertResources(int count) {
-        storageScript.RemoveResource(inputName, count);
-		storageScript.AddResource(outputName, count);
+        storageScript.RemoveResource(input, count);
+		storageScript.AddResource(output, count);
 	}
 
 }

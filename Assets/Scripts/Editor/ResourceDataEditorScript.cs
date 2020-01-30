@@ -16,6 +16,9 @@ public class ResourceDataEditorScript : Editor
             ResourceData r = (ResourceData)target;
             r.sprites = Resources.LoadAll<Sprite>(spriteAtlas.name);
             r.models = Resources.LoadAll<Mesh>(modelAtlas.name);
+            Debug.Log(r.sprites.Length.ToString() + ", " + r.models.Length.ToString());
+            EditorUtility.SetDirty(r);
+            AssetDatabase.SaveAssets();
         }
     }
 }

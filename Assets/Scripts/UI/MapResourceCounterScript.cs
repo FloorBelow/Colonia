@@ -13,4 +13,8 @@ public class MapResourceCounterScript : MonoBehaviour
 	void Update() {
 		text.text = GameManagerScript.m.activeMap.resourceCounts[resource].ToString();
 	}
+
+	public void UpdateCount() {
+		gameObject.GetComponent<TMPro.TextMeshProUGUI>().text = GameManagerScript.m.activeMap.resourceCounts[resource].ToString();
+	}
 }

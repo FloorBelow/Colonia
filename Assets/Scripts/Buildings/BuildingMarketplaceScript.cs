@@ -7,6 +7,7 @@ public class BuildingMarketplaceScript : BuildingJobScript
 
 	public float timer;
 	public ResourceStorageScript storage;
+	public ResourceData[] resourcesToDistribute;
 	BuildingScript building;
     // Start is called before the first frame update
 
@@ -22,24 +23,24 @@ public class BuildingMarketplaceScript : BuildingJobScript
 		if(isActive) {
 			timer -= Time.deltaTime;
 			if (timer < 0) {
-				Process("Grain");
+				foreach (ResourceData resource in resourcesToDistribute) Process(resource);
 				timer = 1;
 			}
 		}
     }
 
-	void Process(string resourceName) {
+	void Process(ResourceData resource) {
 		//Debug.Log(resourceName + ": " + storage.GetCount(resourceName).ToString());
-		if (storage.GetCount(resourceName) > 0) {
+		if (storage.GetCount(resource) > 0) {
 			int min = System.Int16.MaxValue;
 			foreach(BuildingHouseScript house in building.map.houses) {
-				int i = house.gameObject.GetComponent<ResourceStorageScript>().GetCount(resourceName);
+				int i = house.gameObject.GetComponent<ResourceStorageScript>().GetCount(resource);
 				if (i < min) min = i;
 			}
 			foreach (BuildingHouseScript house in building.map.houses) {
-				if (house.gameObject.GetComponent<ResourceStorageScript>().GetCount(resourceName) == min) {
-					Debug.Log("Distributing Grain");
-					storage.TransferResource(resourceName, 1, house.gameObject.GetComponent<ResourceStorageScript>());
+				if (house.gameObject.GetComponent<ResourceStorageScript>().GetCount(resource) == min) {
+					//Debug.Log("Distributing Grain");
+					storage.TransferResource(resource, 1, house.gameObject.GetComponent<ResourceStorageScript>());
 					break;
 				}
 			}

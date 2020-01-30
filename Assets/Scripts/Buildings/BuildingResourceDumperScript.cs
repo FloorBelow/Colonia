@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 	//[Header("Base Data")]
-	public string resourceToDump;
-	ResourceData resource;
+	public ResourceData resourceToDump;
 	public int minToDump;
 	public GameObject walkerPrefab;
 
@@ -29,12 +28,12 @@ public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 	}
 
 	void PeriodicUpdate.PeriodicUpdate() {
-		 if(isActive && storage.GetCount(resource) >= minToDump && dumper.currentJob.GetType() == typeof(WalkerScript.JobIdle)) {
+		 if(isActive && storage.GetCount(resourceToDump) >= minToDump && dumper.currentJob.GetType() == typeof(WalkerScript.JobIdle)) {
 			List<int[]> paths = new List<int[]>();
 			List<ResourceStorageScript> otherStores = new List<ResourceStorageScript>();
 			foreach (GameObject building in buildingScript.map.buildings) {
 				ResourceStorageScript otherStorage = building.GetComponent<ResourceStorageScript>();
-				if (otherStorage != null && otherStorage.gameObject != gameObject && building.HasKeyword(dumpKeywords) && otherStorage.GetSpaceFor(resource) >= minToDump) {
+				if (otherStorage != null && otherStorage.gameObject != gameObject && building.HasKeyword(dumpKeywords) && otherStorage.GetSpaceFor(resourceToDump) >= minToDump) {
 					BuildingScript otherBuildingScript = building.GetComponent<BuildingScript>();
 					int[] path = PathFindScript.Pathfind(buildingScript.map, buildingScript.x, buildingScript.y, otherBuildingScript.x, otherBuildingScript.y, true);
 					if (path != null) {
@@ -64,7 +63,6 @@ public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 	public override void Init() {
 		buildingScript = gameObject.GetComponent<BuildingScript>();
 		storage = gameObject.GetComponent<ResourceStorageScript>();
-		resource = GameManagerScript.m.resources[resourceToDump];
 		//dumper = Instantiate(walkerPrefab, GetComponent<GridObjectRendererScript>().spriteObject.transform).GetComponent<WalkerScript>();
 		dumper = Instantiate(walkerPrefab, GameManagerScript.m.modelPivot).GetComponent<WalkerScript>();
 		dumper.Init(buildingScript.map);

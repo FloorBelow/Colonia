@@ -14,9 +14,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Wood
   stackSize: 4
-  spriteAtlas: {fileID: 2800000, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
-  modelFile: {fileID: -927199367670048503, guid: 505c2ca4e3d2f934291f6c701e07488c,
-    type: 3}
+  sprites:
+  - {fileID: -2067898546876541913, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
+  - {fileID: 2452868899569839818, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
+  - {fileID: 3762640852321080547, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
+  - {fileID: -6984379183983152048, guid: 4c81d7a1739c8664196e3e96db142329, type: 3}
+  models:
+  - {fileID: -3795922648918528791, guid: 505c2ca4e3d2f934291f6c701e07488c, type: 3}
+  - {fileID: -2094318100724101928, guid: 505c2ca4e3d2f934291f6c701e07488c, type: 3}
+  - {fileID: -7647293419525941350, guid: 505c2ca4e3d2f934291f6c701e07488c, type: 3}
+  - {fileID: -1790457999165193022, guid: 505c2ca4e3d2f934291f6c701e07488c, type: 3}
   color: {r: 0.8666667, g: 0.7372549, b: 0.5529412, a: 1}
   icon: {fileID: 21300000, guid: e98263f744e818e4ea28ba4c4363fda1, type: 3}
   iconShort: {fileID: 21300000, guid: 883630d8e083e1a489159a6eae4e10db, type: 3}

@@ -142,8 +142,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   resourceTime: 15
-  resourceName: Wood
-  resource: {fileID: 0}
+  resource: {fileID: 11400000, guid: a27316650bd734d4f9397e11a51d72b6, type: 2}
 --- !u!114 &1192420181163960845
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -157,7 +156,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  resourceToDump: Wood
+  resourceToDump: {fileID: 11400000, guid: a27316650bd734d4f9397e11a51d72b6, type: 2}
   minToDump: 2
   walkerPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
     type: 3}

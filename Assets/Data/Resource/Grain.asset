@@ -14,10 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resourceName: Grain
   stackSize: 4
-  spriteAtlas: {fileID: 2800000, guid: 637c6c20087168243ae1e028d43739aa, type: 3}
-  modelFile: {fileID: -927199367670048503, guid: c576caa4f3b0a8e478248e1a7dd66261,
-    type: 3}
+  sprites:
+  - {fileID: 1761037668083622565, guid: 637c6c20087168243ae1e028d43739aa, type: 3}
+  - {fileID: 5347244813934410504, guid: 637c6c20087168243ae1e028d43739aa, type: 3}
+  - {fileID: 3705515384240643602, guid: 637c6c20087168243ae1e028d43739aa, type: 3}
+  - {fileID: 5405361024183808, guid: 637c6c20087168243ae1e028d43739aa, type: 3}
+  models:
+  - {fileID: -4228862597691542572, guid: c576caa4f3b0a8e478248e1a7dd66261, type: 3}
+  - {fileID: -4217120664640411470, guid: c576caa4f3b0a8e478248e1a7dd66261, type: 3}
+  - {fileID: -7748008642610653580, guid: c576caa4f3b0a8e478248e1a7dd66261, type: 3}
+  - {fileID: 2548065834070659944, guid: c576caa4f3b0a8e478248e1a7dd66261, type: 3}
   color: {r: 0.972549, g: 0.9607843, b: 0.6039216, a: 1}
   icon: {fileID: 21300000, guid: 16a16b89ef842ea4e9feb65f3a86feda, type: 3}
-  iconShort: {fileID: 0}
+  iconShort: {fileID: 21300000, guid: b47d38aebe8364e4fba13a786cbd8a7d, type: 3}
   type: 1

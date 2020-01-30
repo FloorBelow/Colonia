@@ -132,8 +132,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   resourceTime: 3
-  resourceName: Wheat
-  resource: {fileID: 0}
+  resource: {fileID: 11400000, guid: 465df49d85f4ee24f99150c3b63885a5, type: 2}
 --- !u!114 &7612911227370427363
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -147,7 +146,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  resourceToDump: Wheat
+  resourceToDump: {fileID: 11400000, guid: 465df49d85f4ee24f99150c3b63885a5, type: 2}
   minToDump: 4
   walkerPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
     type: 3}

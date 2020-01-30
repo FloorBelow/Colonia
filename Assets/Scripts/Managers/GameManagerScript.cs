@@ -38,6 +38,7 @@ public class GameManagerScript : MonoBehaviour {
 	//Game data
 	public GameObjectSetData buildingSet;
     public ResourceData[] resourceTypes;
+	public ResourceDataSet resourceTypeSet;
     public Dictionary<string, GameObject> buildings;
     public Dictionary<string, ResourceData> resources;
 
@@ -104,7 +105,7 @@ public class GameManagerScript : MonoBehaviour {
             buildings.Add(o.GetComponent<BuildingScript>().buildingName, o);
         }
         resources = new Dictionary<string, ResourceData>();
-        foreach (ResourceData o in resourceTypes) {
+        foreach (ResourceData o in resourceTypeSet.objects) {
             resources.Add(o.resourceName, o);
         }
 
@@ -122,8 +123,8 @@ public class GameManagerScript : MonoBehaviour {
 		}
 		ResourceStorageScript startStorage = activeMap.PlaceBuilding(buildings["Warehouse"], 33, activeMap.sizeY / 2 + 1, sortSprites: false).GetComponent<ResourceStorageScript>();
 		activeMap.SortSprites();
-		startStorage.AddResource(resources["Wood"], 24);
-		startStorage.AddResource(resources["Brick"], 40);
+		startStorage.AddResource(resourceTypeSet.objects[0], 24);
+		startStorage.AddResource(resourceTypeSet.objects[1], 40);
 
 
 		//gameState = gameObject.AddComponent<GameStateRegionScript>();
@@ -149,16 +150,20 @@ public class GameManagerScript : MonoBehaviour {
 			buildingGhost.GetComponent<GridObjectRendererScript>().SetPosition(x, y);
 			BuildingAreaDisplayScript area = buildingGhost.GetComponent<BuildingAreaDisplayScript>();
 			if (area != null) { area.DestroyRadiusDisplay(); area.CreateRadiusDisplay(); }
-			if (activeMap.CheckClearToBuild(x, y, buildingGhost)) {
-				buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
-			} else {
-				buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
-			}
+			CheckBuildingGhostClear(x, y);
 		} else if(controlState == ControlState.PlaceRoad) {
 			roadGhosts[0].sprite.transform.position = MapScript.TileToPosition(x, y);
 			roadGhosts[0] = new RoadGhost(roadGhosts[0].sprite, x, y);
 		} else if(controlState == ControlState.PlaceRoadSegment) {
 			PlaceRoadSegmentOnMouseTileChange(x, y);
+		}
+	}
+
+	void CheckBuildingGhostClear(int x, int y) {
+		if (activeMap.CheckClearToBuild(x, y, buildingGhost)) {
+			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
+		} else {
+			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
 		}
 	}
 
@@ -260,6 +265,7 @@ public class GameManagerScript : MonoBehaviour {
 		if (renderer.data.sizeX != renderer.data.sizeY) {
 			buildingGhostRotate = !buildingGhostRotate;
 			renderer.Flip();
+			CheckBuildingGhostClear(mouseTileX, mouseTileY);
 			//buildingGhost.GetComponent<BuildingScript>().Flip();
 			audioManager.Click(1);
 		}

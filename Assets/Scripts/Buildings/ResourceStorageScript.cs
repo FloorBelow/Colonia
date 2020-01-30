@@ -30,11 +30,6 @@ public class ResourceStorageScript : InitScript {
         slots = new ResourceScript[slotPositions.Length];
     }
 
-    public int GetCount(string name) {
-		if (!totals.ContainsKey(GameManagerScript.m.resources[name])) return 0;
-		return totals[GameManagerScript.m.resources[name]];
-    }
-
 	public int GetCount(ResourceData resource) {
 		if (!totals.ContainsKey(resource)) return 0;
 		return totals[resource];
@@ -172,13 +167,5 @@ public class ResourceStorageScript : InitScript {
 
 	public void AddResource(string name, int count) {
 		AddResource(GameManagerScript.m.resources[name], count);
-	}
-
-	public void RemoveResource(string name, int count) {
-		RemoveResource(GameManagerScript.m.resources[name], count);
-	}
-
-	public void TransferResource(string name, int count, ResourceStorageScript other) {
-		TransferResource(GameManagerScript.m.resources[name], count, other);
 	}
 }

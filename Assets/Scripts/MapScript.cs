@@ -43,7 +43,7 @@ public class MapScript : MonoBehaviour {
 		updateQueue = new Queue<PeriodicUpdate>();
 		//buildings = new List<GameObject>();
 		resourceCounts = new Dictionary<ResourceData, int>();
-		foreach(ResourceData resource in GameManagerScript.m.resources.Values) {
+		foreach(ResourceData resource in GameManagerScript.m.resourceTypeSet.objects) {
 			resourceCounts[resource] = 0;
 		}
 		updateTimer = updateTime;

@@ -134,7 +134,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  resourceToFetch: Wheat
+  resourceToFetch: {fileID: 11400000, guid: 465df49d85f4ee24f99150c3b63885a5, type: 2}
   minToFetch: 2
   fetcherPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
     type: 3}
@@ -155,8 +155,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   resourceTime: 6
-  inputName: Wheat
-  outputName: Grain
+  input: {fileID: 11400000, guid: 465df49d85f4ee24f99150c3b63885a5, type: 2}
+  output: {fileID: 11400000, guid: ecd34323cec7e9b4dbd8bd8f77c94308, type: 2}
 --- !u!114 &5241184710163310854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -170,7 +170,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  resourceToDump: Grain
+  resourceToDump: {fileID: 11400000, guid: ecd34323cec7e9b4dbd8bd8f77c94308, type: 2}
   minToDump: 4
   walkerPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
     type: 3}

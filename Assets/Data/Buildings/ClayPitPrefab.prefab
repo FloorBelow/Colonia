@@ -133,7 +133,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isActive: 0
   resourceTime: 10
-  resourceName: Clay
   resource: {fileID: 11400000, guid: e72b3ed2240555d45989bbfc596f424c, type: 2}
 --- !u!114 &-6764105310786611315
 MonoBehaviour:
@@ -148,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isActive: 0
-  resourceToDump: Clay
+  resourceToDump: {fileID: 11400000, guid: e72b3ed2240555d45989bbfc596f424c, type: 2}
   minToDump: 4
   walkerPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
     type: 3}
