@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: PerkNaturalGrain
   m_EditorClassIdentifier: 
   perkName: Clay
-  icon: {fileID: 21300000, guid: 16a16b89ef842ea4e9feb65f3a86feda, type: 3}
+  icon: {fileID: 21300000, guid: 2e033985b5472f24ea072346ab74b78b, type: 3}
   iconColor: {fileID: 11400000, guid: 208f43ef8fc4eb6499c7540270df62e9, type: 2}
   buildingUnlocks:
   - {fileID: 1101187664243718, guid: 40768089e650b274f9e94593ffb4dac0, type: 3}

@@ -32,11 +32,11 @@ public class InputScript : MonoBehaviour {
 		isMouseOverUI = EventSystem.current.IsPointerOverGameObject();
 		if(!isMouseOverUI) {
 			if (Input.GetMouseButtonDown(0)) {
-				gameManager.LeftClick(isMouseOverUI);
+				gameManager.LeftClick();
 			} else if (Input.GetMouseButtonDown(1)) {
-				gameManager.RightClick(isMouseOverUI);
+				gameManager.RightClick();
 			} else if (Input.GetMouseButtonDown(2)) {
-				gameManager.MiddleClick(isMouseOverUI);
+				gameManager.MiddleClick();
 			}
 		}
 

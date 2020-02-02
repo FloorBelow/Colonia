@@ -20,12 +20,13 @@ public class BuildingPanelScript : MonoBehaviour
 	public GameObject foodCounterPrefab;
 	List<GameObject> dynamicChildren;
 
-	private void Start() {
+	private void Init() {
 		dynamicChildren = new List<GameObject>();
 		buildingIcon = buildingIconGameObject.GetComponent<Image>();
 	}
 
 	public void SetData(GameObject building) {
+		if (dynamicChildren == null) Init();
 		foreach (GameObject o in dynamicChildren) Destroy(o); dynamicChildren.Clear(); //Need to do some kind of pooling later, seperate SetData and UpdateData
 		BuildingScript buildingScript = building.GetComponent<BuildingScript>();
 		gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = buildingScript.buildingName;

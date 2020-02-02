@@ -170,31 +170,45 @@ public class GameManagerScript : MonoBehaviour {
 
 
 	//Input
-	public void LeftClick(bool isMouseOverUI) {
-		if (controlState == ControlState.PlaceBuilding) {
-			if (isMouseOverUI) {
-				RemoveBuildingGhost();
-			} else {
-				PlaceBuilding(mouseTileX, mouseTileY);
-			}
-		} else if (controlState == ControlState.PlaceRoad) {
-			StartPlaceRoadSegment();
-			audioManager.Click();
-		} else if (controlState == ControlState.PlaceRoadSegment) {
-			PlaceRoadSegment();
-		} else {
+	public void LeftClick() {
+		if (controlState == ControlState.PlaceBuilding) PlaceBuilding(mouseTileX, mouseTileY);
+		else if (controlState == ControlState.PlaceRoad) StartPlaceRoadSegment();
+		else if (controlState == ControlState.PlaceRoadSegment) PlaceRoadSegment();
+		else {
 			SelectBuilding(activeMap.GetTile(mouseTileX, mouseTileY).building);
 			RegionScript newSelectedRegion = (activeMap.GetTile(mouseTileX, mouseTileY).region);
-			//Select region
-			if (newSelectedRegion != selectedRegion) {
-				selectedRegion = newSelectedRegion;
-				selectedRegion.UpdateAllowedBuildings();
-				uiManager.SetRegionPanel(selectedRegion);
-				CreateRegionOutline();
-				audioManager.Click();
-			}
+			if (newSelectedRegion != selectedRegion) SelectRegion(newSelectedRegion);
 		}
+	}
 
+	public void RightClick() {
+		if (controlState == ControlState.PlaceBuilding) RemoveBuildingGhost();
+		else if (controlState == ControlState.PlaceRoad) ExitBuildRoad();
+		else if (controlState == ControlState.PlaceRoadSegment) StopPlaceRoadSegment();
+		else if (activeMap.GetTile(mouseTileX, mouseTileY).building != null) RemoveBuilding(mouseTileX, mouseTileY);
+		else DeselectRegion();
+	}
+
+	public void MiddleClick() {
+		if (controlState == ControlState.PlaceBuilding) {
+			RotateBuildingGhost();
+		}
+	}
+
+	void SelectRegion(RegionScript newSelectedRegion) {
+		selectedRegion = newSelectedRegion;
+		selectedRegion.UpdateAllowedBuildings();
+		uiManager.SetRegionPanel(selectedRegion);
+		CreateRegionOutline();
+		audioManager.Click();
+	}
+
+	void DeselectRegion() {
+		selectedRegion = null;
+		Destroy(selectedRegionOutline);
+		uiManager.HideRegionPanel();
+		uiManager.SetBuildingButtonPanelActive(false);
+		audioManager.Click();
 	}
 
 	public void CreateRegionOutline() {
@@ -210,19 +224,7 @@ public class GameManagerScript : MonoBehaviour {
 		//if (building.GetComponent<BuildingAreaDisplayScript>() != null) building.GetComponent<BuildingAreaDisplayScript>().CreateRadiusDisplay();
 	}
 
-	public void RightClick(bool isMouseOverUI) {
-		audioManager.Click();
-		if (controlState == ControlState.PlaceBuilding) RemoveBuildingGhost();
-		else if (controlState == ControlState.PlaceRoad) ExitBuildRoad();
-		else if (controlState == ControlState.PlaceRoadSegment) StopPlaceRoadSegment();
-		else RemoveBuilding(mouseTileX, mouseTileY);
-	}
 
-	public void MiddleClick(bool isMouseOverUI) {
-		if (controlState == ControlState.PlaceBuilding) {
-			RotateBuildingGhost();
-		}
-	}
 
 	string IntToRoman(int i) {
 		int[] dec = new int[] { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
@@ -373,6 +375,7 @@ public class GameManagerScript : MonoBehaviour {
 
 	void StartPlaceRoadSegment() {
 		controlState = ControlState.PlaceRoadSegment;
+		audioManager.Click();
 	}
 
 	void StopPlaceRoadSegment() {
