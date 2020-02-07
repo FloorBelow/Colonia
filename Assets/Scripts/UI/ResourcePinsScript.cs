@@ -18,7 +18,7 @@ public class ResourcePinsScript : MonoBehaviour
 	}
 
 	void InitPopupPanel() {
-		foreach (ResourceData resource in GameManagerScript.m.resourceTypeSet.objects) {
+		foreach (ResourceData resource in UtilityScript.data.resources) {
 			GameObject counter = Instantiate(resourceCounterPrefab, transform);
 			Image counterImage = counter.transform.GetChild(0).GetComponent<Image>();
 			counterImage.sprite = resource.iconShort;

@@ -92,7 +92,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06cd8903210eaa444ac91ead41fe1027, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  buildingName: Kiln
+  buildingName: Brickworks
   sizeX: 2
   sizeY: 2
   sizeZ: 2

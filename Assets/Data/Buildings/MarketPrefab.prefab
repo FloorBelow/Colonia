@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 114656856185073026}
   - component: {fileID: 7314511853566684810}
   - component: {fileID: 1045704707957305540}
+  - component: {fileID: 1238411366353554114}
   - component: {fileID: 3994495677141177812}
   - component: {fileID: -4707893249349805242}
   m_Layer: 0
@@ -138,6 +139,26 @@ MonoBehaviour:
   fetchKeywords:
   - {fileID: 11400000, guid: 2e55aee18574f4f4ab2afb80ca378ae9, type: 2}
   fetcher: {fileID: 0}
+--- !u!114 &1238411366353554114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1679998595150926}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b3ac62c441589784f99d26e5151f99a1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isActive: 0
+  resourceToFetch: {fileID: 11400000, guid: 0a6a8b6929a3dd248be635fa184cc89b, type: 2}
+  minToFetch: 4
+  fetcherPrefab: {fileID: 5046914162905897261, guid: 3eb5f430677cfb14abd2dcd523274f94,
+    type: 3}
+  fetchKeywords:
+  - {fileID: 11400000, guid: 344dbfbe90578144da76b1a72cec00c2, type: 2}
+  fetcher: {fileID: 0}
 --- !u!114 &3994495677141177812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -155,6 +176,7 @@ MonoBehaviour:
   storage: {fileID: 0}
   resourcesToDistribute:
   - {fileID: 11400000, guid: ecd34323cec7e9b4dbd8bd8f77c94308, type: 2}
+  - {fileID: 11400000, guid: 0a6a8b6929a3dd248be635fa184cc89b, type: 2}
 --- !u!114 &-4707893249349805242
 MonoBehaviour:
   m_ObjectHideFlags: 0

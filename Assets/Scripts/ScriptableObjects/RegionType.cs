@@ -11,6 +11,7 @@ public class RegionType : ScriptableObject
 	public ColorData iconColor;
 	public ColorData outlineColor;
 	public GameObject[] buildingUnlocks;
+	public RegionType parent;
 	public RegionType upgrade;
 	public RegionLevelRequirement levelUpRequirement;
 }

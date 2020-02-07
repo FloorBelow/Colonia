@@ -20,15 +20,14 @@ public class GameManagerScript : MonoBehaviour {
     public static GameManagerScript m;
 	[Header("Game Data")]
 
+	public GameData data;
 	public Transform modelPivot;
 
+	//shit now i wanna make this all scriptableobjects
+	//probably ill learn when to use scriptableobjects vs managers better sometime also nice that the word scriptableobject lined up right there
 
-
-    //shit now i wanna make this all scriptableobjects
-    //probably ill learn when to use scriptableobjects vs managers better sometime also nice that the word scriptableobject lined up right there
-
-    //Scripts (aaaaaaaaaaaaaa)
-    InputScript inputManager;
+	//Scripts (aaaaaaaaaaaaaa)
+	InputScript inputManager;
 	AudioMangagerScript audioManager;
 
 	//public GameStateScript gameState;
@@ -36,11 +35,7 @@ public class GameManagerScript : MonoBehaviour {
 	public UIManagerScript uiManagerMobile;
 
 	//Game data
-	public GameObjectSetData buildingSet;
-    public ResourceData[] resourceTypes;
-	public ResourceDataSet resourceTypeSet;
     public Dictionary<string, GameObject> buildings;
-    public Dictionary<string, ResourceData> resources;
 
 	public GameObject immigrantWalkerPrefab;
 
@@ -51,12 +46,6 @@ public class GameManagerScript : MonoBehaviour {
 	public Keyword resourceStoreKeyword;
 
 	public GameObject startingMap;
-
-	[Header("Art Stuff")]
-	public Material modelMat; //sorry
-	public Material outlineMat;
-	public Color transparentColor;
-	public Color transparentRedColor;
 
 	[Header("Instance Variables")]
 
@@ -89,6 +78,7 @@ public class GameManagerScript : MonoBehaviour {
 
 	void Awake() {
 		m = this;
+		UtilityScript.data = data;
 		if (mobile) {
 			uiManager.gameObject.SetActive(false);
 			uiManager = uiManagerMobile;
@@ -101,12 +91,8 @@ public class GameManagerScript : MonoBehaviour {
 
         //Build dics
         buildings = new Dictionary<string, GameObject>();
-        foreach(GameObject o in buildingSet.objects) {
+        foreach(GameObject o in UtilityScript.data.buildings) {
             buildings.Add(o.GetComponent<BuildingScript>().buildingName, o);
-        }
-        resources = new Dictionary<string, ResourceData>();
-        foreach (ResourceData o in resourceTypeSet.objects) {
-            resources.Add(o.resourceName, o);
         }
 
         inputManager = gameObject.AddComponent<InputScript>();
@@ -123,8 +109,8 @@ public class GameManagerScript : MonoBehaviour {
 		}
 		ResourceStorageScript startStorage = activeMap.PlaceBuilding(buildings["Warehouse"], 33, activeMap.sizeY / 2 + 1, sortSprites: false).GetComponent<ResourceStorageScript>();
 		activeMap.SortSprites();
-		startStorage.AddResource(resourceTypeSet.objects[0], 24);
-		startStorage.AddResource(resourceTypeSet.objects[1], 40);
+		startStorage.AddResource(UtilityScript.data.resources[0], 24);
+		startStorage.AddResource(UtilityScript.data.resources[1], 40);
 
 
 		//gameState = gameObject.AddComponent<GameStateRegionScript>();
@@ -138,9 +124,9 @@ public class GameManagerScript : MonoBehaviour {
 		mouseTileX = inputManager.mouseTileX;
 		mouseTileY = inputManager.mouseTileY;
 
-		if(selectedObject != null) {
-			uiManager.SetInfoBox(selectedObject);
-		}
+		//if(selectedObject != null) {
+		uiManager.SetInfoBox(selectedObject);
+		//}
 
 		if(selectedRegion != null) uiManager.UpdateRegionPanel();
 	}
@@ -161,9 +147,9 @@ public class GameManagerScript : MonoBehaviour {
 
 	void CheckBuildingGhostClear(int x, int y) {
 		if (activeMap.CheckClearToBuild(x, y, buildingGhost)) {
-			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
+			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(UtilityScript.data.transparentColor);
 		} else {
-			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
+			buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(UtilityScript.data.transparentRedColor);
 		}
 	}
 
@@ -186,7 +172,7 @@ public class GameManagerScript : MonoBehaviour {
 		else if (controlState == ControlState.PlaceRoad) ExitBuildRoad();
 		else if (controlState == ControlState.PlaceRoadSegment) StopPlaceRoadSegment();
 		else if (activeMap.GetTile(mouseTileX, mouseTileY).building != null) RemoveBuilding(mouseTileX, mouseTileY);
-		else DeselectRegion();
+		else { DeselectRegion(); DeselectBuilding(); }
 	}
 
 	public void MiddleClick() {
@@ -204,6 +190,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void DeselectRegion() {
+		if (selectedRegion == null) return;
 		selectedRegion = null;
 		Destroy(selectedRegionOutline);
 		uiManager.HideRegionPanel();
@@ -224,19 +211,11 @@ public class GameManagerScript : MonoBehaviour {
 		//if (building.GetComponent<BuildingAreaDisplayScript>() != null) building.GetComponent<BuildingAreaDisplayScript>().CreateRadiusDisplay();
 	}
 
-
-
-	string IntToRoman(int i) {
-		int[] dec = new int[] { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
-		string[] roman = new string[] { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
-		string result = "";
-		for(int x = 0; x < dec.Length; x++) {
-			while(i % dec[x] < i) {
-				result += roman[x];
-				i -= dec[x];
-			}
-		}
-		return result;
+	void DeselectBuilding() {
+		if (selectedObject == null) return;
+		if (selectedObject.GetComponent<BuildingAreaDisplayScript>() != null) selectedObject.GetComponent<BuildingAreaDisplayScript>().DestroyRadiusDisplay();
+		selectedObject = null;
+		//if (building.GetComponent<BuildingAreaDisplayScript>() != null) building.GetComponent<BuildingAreaDisplayScript>().CreateRadiusDisplay();
 	}
 
 	public void SetCurrentBuildingPrefab(string name) {
@@ -250,8 +229,8 @@ public class GameManagerScript : MonoBehaviour {
         buildingGhost = new GameObject();
         buildingGhost.transform.SetParent(modelPivot, false);
 		GridObjectRendererScript.CreateRenderer(buildingGhost, currentBuildingPrefab.GetComponent<GridObjectRendererScript>().data, mouseTileX, mouseTileY, buildingGhostRotate);
-		if (activeMap.CheckClearToBuild(mouseTileX, mouseTileY, buildingGhost)) buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentColor);
-		else buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(transparentRedColor);
+		if (activeMap.CheckClearToBuild(mouseTileX, mouseTileY, buildingGhost)) buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(UtilityScript.data.transparentColor);
+		else buildingGhost.GetComponent<GridObjectRendererScript>().SetSpriteColor(UtilityScript.data.transparentRedColor);
 		BuildingAreaDisplayScript prefabArea = currentBuildingPrefab.GetComponent<BuildingAreaDisplayScript>();
 		if (prefabArea != null) {
 			BuildingAreaDisplayScript area = buildingGhost.AddComponent<BuildingAreaDisplayScript>();
@@ -391,7 +370,7 @@ public class GameManagerScript : MonoBehaviour {
 		road.transform.position = MapScript.TileToPosition(x, y);
 		SpriteRenderer s = road.AddComponent<SpriteRenderer>();
 		s.sprite = buildings["Road"].GetComponent<GridObjectRendererScript>().data.sprites[0];
-		s.color = transparentColor;
+		s.color = UtilityScript.data.transparentColor;
 		return new RoadGhost(road, x, y);	
 	}
 

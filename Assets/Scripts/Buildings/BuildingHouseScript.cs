@@ -6,6 +6,7 @@ public class BuildingHouseScript : InitScript {
     [Header("Base Data")]
     public int capacity;
 	public float foodConsumptionTime;
+	public float goodsConsumptionTime;
 	[Header("Instance Variables")]
 	public int happiness;
 	public float happinessUpdateTime;
@@ -18,6 +19,7 @@ public class BuildingHouseScript : InitScript {
     public bool occupantsArriving;
 	ResourceStorageScript storage;
 	public ResourceUse food;
+	public ResourceUse goods;
 
 	public struct ResourceUse {
 		public ResourceData resource;
@@ -32,6 +34,7 @@ public class BuildingHouseScript : InitScript {
 		happiness = 80;
 		occupantsArriving = false;
 		food = new ResourceUse();
+		goods = new ResourceUse();
 	}
 	private void Update() {
 		happinessTimer -= Time.deltaTime;
@@ -53,7 +56,21 @@ public class BuildingHouseScript : InitScript {
 				}
 			}
 		}
+		if (goods.timer <= 0) {
+			goods.resource = null;
+			foreach (ResourceData resource in storage.totals.Keys) {
+				if (resource.type == ResourceData.Type.Goods) {
+					if (storage.totals[resource] > 0) {
+						storage.RemoveResource(resource, 1);
+						goods.resource = resource;
+						goods.timer = goodsConsumptionTime;
+						break;
+					}
+				}
+			}
+		}
 		food.timer -= Time.deltaTime;
+		goods.timer -= Time.deltaTime;
 	}
 
 	bool UpdateHappiness() {

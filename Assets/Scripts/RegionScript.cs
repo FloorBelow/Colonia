@@ -19,7 +19,6 @@ public class RegionScript : MonoBehaviour
 	public Color color;
 	public int[,] tiles;
 
-	GameObjectSetData.ObjectList buildingsSet;
 	public int[] allowedBuildings;
 
 	public HashSet<BuildingScript> buildings;
@@ -27,8 +26,7 @@ public class RegionScript : MonoBehaviour
 
 	private void Start() {
 		houses = new HashSet<BuildingHouseScript>();
-		buildingsSet = GameManagerScript.m.buildingSet.objects;
-		allowedBuildings = new int[buildingsSet.Length];
+		allowedBuildings = new int[UtilityScript.data.buildings.Length];
 	}
 
 	public void AddBuilding(BuildingScript building) {
@@ -57,32 +55,40 @@ public class RegionScript : MonoBehaviour
 	}
 
 	public int[] GetLevelUp() {
-		int[] values = new int[8];
-		int index = 1;
+		int[] values = new int[6];
 		bool satisfied = true;
-		if (regionType.levelUpRequirement.food > 0) {
-			values[index] = GetHouseFood();
-			satisfied = values[index] >= regionType.levelUpRequirement.population;
-			index++;
-		}
-		for(int i = 0; i < regionType.levelUpRequirement.needs.Length; i++) {
-			values[index] = GetHouseNeed(regionType.levelUpRequirement.needs[i]);
-			if(satisfied) satisfied = values[index] >= regionType.levelUpRequirement.population;
-			index++;
+		values[1] = GetHouseFood();
+		values[2] = GetHouseGoods();
+		values[3] = GetHouseNeed(UtilityScript.data.needSanitation, regionType.levelUpRequirement.sanitation);
+		values[4] = GetHouseNeed(UtilityScript.data.needReligon, regionType.levelUpRequirement.religion);
+		values[5] = GetHouseNeed(UtilityScript.data.needEntertainment, regionType.levelUpRequirement.entertainment);
+		for(int i = 1; i < 6; i++) {
+			if (values[i] != -1 && values[i] < regionType.levelUpRequirement.population) satisfied = false;
 		}
 		values[0] = satisfied ? 1 : 0;
-		System.Array.Resize(ref values, index);
 		return values;
 	}
 
 	int GetHouseFood() {
+		if (regionType.levelUpRequirement.food == 0) return -1;
 		int i = 0;
 		foreach(BuildingHouseScript house in houses) {
 			if (house.food.resource != null) i += house.population;
 		}
 		return i;
 	}
-	int GetHouseNeed(NeedData n) {
+
+	int GetHouseGoods() {
+		if (regionType.levelUpRequirement.goods == 0) return -1;
+		int i = 0;
+		foreach (BuildingHouseScript house in houses) {
+			if (house.goods.resource != null) i += house.population;
+		}
+		return i;
+	}
+
+	int GetHouseNeed(NeedData n, int requirement) {
+		if (requirement == 0) return -1;
 		int i = 0;
 		foreach (BuildingHouseScript house in houses) {
 			if (house.GetNeedCount(n) > 0) i += house.population;
@@ -102,11 +108,17 @@ public class RegionScript : MonoBehaviour
 	public void UpdateAllowedBuildings() {
 		//Reset List
 		for (int i = 0; i < allowedBuildings.Length; i++) allowedBuildings[i] = 0;
-		for(int i = 0; i < regionType.buildingUnlocks.Length; i++) {
-			allowedBuildings[buildingsSet.IndexOf(regionType.buildingUnlocks[i])] = 1;
-		}	
 
+		//Unlocks from region type
+		RegionType region = regionType;
+		while(region != null) {
+			for (int i = 0; i < region.buildingUnlocks.Length; i++) {
+				allowedBuildings[System.Array.IndexOf(UtilityScript.data.buildings, region.buildingUnlocks[i])] = 1;
+			}
+			region = region.parent;
+		}
 
+		//Unlocks from perks
 		for(int i = 0; i < perks.Length; i++) {
 			bool usePerk = false;
 			if (perks[i].requiredTypes.Length == 0) usePerk = true; else {
@@ -115,7 +127,7 @@ public class RegionScript : MonoBehaviour
 				}
 			}
 			if(usePerk) for(int j = 0; j < perks[i].buildingUnlocks.Length; j++) {
-				allowedBuildings[buildingsSet.IndexOf(perks[i].buildingUnlocks[j])] = 1;
+				allowedBuildings[System.Array.IndexOf(UtilityScript.data.buildings, perks[i].buildingUnlocks[j])] = 1;
 			}
 		}
 	}

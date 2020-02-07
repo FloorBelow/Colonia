@@ -33,7 +33,7 @@ public class ObjectRendererScript : MonoBehaviour
 		MeshFilter meshFilter = modelObject.AddComponent<MeshFilter>();
 		meshFilter.sharedMesh = models[0];
 		MeshRenderer meshRenderer = modelObject.AddComponent<MeshRenderer>();
-		meshRenderer.material = GameManagerScript.m.modelMat;
+		meshRenderer.material = UtilityScript.data.modelMat;
 	}
 	public void SetData(Sprite[] sprites, Mesh[] models) {
 		if (sprites.Length != models.Length) Debug.LogError("Sprites and models not same size!");

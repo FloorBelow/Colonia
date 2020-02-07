@@ -33,7 +33,7 @@ public class MapReader
 				while (PeekNext() != ")") {
 					string resourceName = ReadNext();
 					int count = Int32.Parse(ReadNext());
-					store.AddResource(resourceName, count);
+					store.AddResource(UtilityScript.GetResource(resourceName), count);
 				}
 				SeekNext();
 			}

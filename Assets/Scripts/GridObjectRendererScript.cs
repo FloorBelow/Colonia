@@ -33,7 +33,7 @@ public class GridObjectRendererScript : MonoBehaviour
             MeshFilter meshFilter = modelObject.AddComponent<MeshFilter>();
             meshFilter.sharedMesh = data.model;
             MeshRenderer meshRenderer = modelObject.AddComponent<MeshRenderer>();
-            meshRenderer.material = GameManagerScript.m.modelMat;
+            meshRenderer.material = UtilityScript.data.modelMat;
         }
     }
 

@@ -164,8 +164,4 @@ public class ResourceStorageScript : InitScript {
         }
         */
     }
-
-	public void AddResource(string name, int count) {
-		AddResource(GameManagerScript.m.resources[name], count);
-	}
 }

@@ -11,9 +11,9 @@ public class BuildingButtonPanelScript : MonoBehaviour
 	public GameObject[] buttons;
     void Start()
     {
-		buttons = new GameObject[GameManagerScript.m.buildingSet.objects.Count];
+		buttons = new GameObject[UtilityScript.data.buildings.Length];
 		for(int i = 0; i < buttons.Length; i++) {
-			BuildingScript buildingScript = GameManagerScript.m.buildingSet.objects[i].GetComponent<BuildingScript>();
+			BuildingScript buildingScript = UtilityScript.data.buildings[i].GetComponent<BuildingScript>();
 			UnityAction action = delegate { GameManagerScript.m.SetCurrentBuildingPrefab(buildingScript.buildingName); };
 			GameObject button = Instantiate(BuildingButtonPrefab, transform);
 			button.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = buildingScript.buildingName;

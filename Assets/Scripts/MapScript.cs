@@ -8,8 +8,6 @@ public class MapScript : MonoBehaviour {
 
 
 	public Queue<PeriodicUpdate> updateQueue;
-	float updateTime = 1;
-	float updateTimer;
 
 	public int test;
 	public UIManagerScript uiManager;
@@ -41,12 +39,8 @@ public class MapScript : MonoBehaviour {
 
 	void Start () {
 		updateQueue = new Queue<PeriodicUpdate>();
-		//buildings = new List<GameObject>();
 		resourceCounts = new Dictionary<ResourceData, int>();
-		foreach(ResourceData resource in GameManagerScript.m.resourceTypeSet.objects) {
-			resourceCounts[resource] = 0;
-		}
-		updateTimer = updateTime;
+		foreach (ResourceData r in UtilityScript.data.resources) resourceCounts[r] = 0;
 	}
 
 	private void Update() {
@@ -255,7 +249,7 @@ public class MapScript : MonoBehaviour {
 
 		line.loop = false;
 		line.widthMultiplier = 0.04f;
-		line.material = GameManagerScript.m.outlineMat;
+		line.material = UtilityScript.data.outlineMat;
 		line.startColor = region.regionType.outlineColor; line.endColor = region.regionType.outlineColor;
 		line.positionCount = positions.Length;
 		line.SetPositions(positions);

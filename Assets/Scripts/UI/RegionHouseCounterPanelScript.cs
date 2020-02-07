@@ -14,18 +14,21 @@ public class RegionHouseCounterPanelScript : MonoBehaviour
 		int[] values = region.GetLevelUp();
 		int pop = region.regionType.levelUpRequirement.population;
 		populationCounter.text = region.GetPopulation().ToString();
-		upgradeButton.interactable = values[0] == 1;
-		for(int i = 0; i < needCounters.Length; i++) {
-			if (i < values.Length - 1) {
-				needCounters[i].GetComponentInChildren<TMPro.TextMeshProUGUI>().text = string.Format("{0}/{1}", values[i + 1], pop);
-				needCounters[i].transform.GetChild(1).GetComponent<Image>().fillAmount = values[i + 1] / (float)pop;
-				if(i != 0) {
-					Image icon = needCounters[i].transform.GetChild(2).GetComponent<Image>();
-					icon.sprite = region.regionType.levelUpRequirement.needs[i - 1].icon;
-					icon.color = region.regionType.levelUpRequirement.needs[i - 1].color;
-				}
+		upgradeButton.interactable = GameManagerScript.m.debugMode ? true : values[0] == 1;
+		Debug.Log(values.Length);
+		for(int i = 0; i < 5; i++) {
+			if (values[i + 1] == -1) {
+				needCounters[i].SetActive(false);
+			} else {
 				needCounters[i].SetActive(true);
-			} else needCounters[i].SetActive(false);
+				//needCounters[i].transform.GetChild(2).GetComponent<TMPro.TextMeshProUGUI>().text = UtilityScript.IntToRoman(;
+				needCounters[i].transform.GetChild(3).GetComponent<TMPro.TextMeshProUGUI>().text = string.Format("{0}/{1}", values[i + 1], pop);
+				needCounters[i].transform.GetChild(1).GetComponent<Image>().fillAmount = values[i + 1] / (float)pop;
+			}
+			//	Image icon = needCounters[i].transform.GetChild(2).GetComponent<Image>();
+			//	icon.sprite = region.regionType.levelUpRequirement.needs[i - 2].icon;
+			//	icon.color = region.regionType.levelUpRequirement.needs[i - 2].color;
+			//}
 		}
 	}
 }
