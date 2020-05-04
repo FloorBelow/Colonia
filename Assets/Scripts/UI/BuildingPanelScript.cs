@@ -29,7 +29,9 @@ public class BuildingPanelScript : MonoBehaviour
 		if (dynamicChildren == null) Init();
 		foreach (GameObject o in dynamicChildren) Destroy(o); dynamicChildren.Clear(); //Need to do some kind of pooling later, seperate SetData and UpdateData
 		BuildingScript buildingScript = building.GetComponent<BuildingScript>();
-		gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = buildingScript.buildingName;
+		gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = building.GetComponent<GridObjectRendererScript>().walkersBehindMe.Count.ToString();
+		//gameObject.GetComponentInChildren<TMPro.TextMeshProUGUI>().text = buildingScript.buildingName;
+
 		buildingIcon.sprite = buildingScript.icon.sprite;
 		buildingIcon.color = buildingScript.icon.color.color;
 

@@ -49,10 +49,10 @@ public class BuildingAreaDisplayScript : MonoBehaviour
 		}
 	}
 
-	public GameObject[] GetBuildingsInRange() {
+	public HashSet<GameObject> GetBuildingsInRange() {
 		if (renderer == null) renderer = gameObject.GetComponent<GridObjectRendererScript>();
 		if (building == null) { building = gameObject.GetComponent<BuildingScript>(); sizeX = building.map.sizeX; sizeY = building.map.sizeY; }
-		List<GameObject> buildings = new List<GameObject>();
+		HashSet<GameObject> buildings = new HashSet<GameObject>();
 		int buildingX = (renderer.flip ? renderer.data.sizeY : renderer.data.sizeX);
 		int buildingY = (renderer.flip ? renderer.data.sizeX : renderer.data.sizeY);
 		float xPos = renderer.x + ((float)buildingX - 1) / 2;
@@ -62,12 +62,12 @@ public class BuildingAreaDisplayScript : MonoBehaviour
 			for (int x = renderer.x - (int)radius; x < renderer.x + buildingX + (int)radius; x++) {
 				if (y >= 0 && y < sizeY && x >= 0 && x < sizeX) {
 					if (Mathf.Pow((float)x - xPos, 2) + Mathf.Pow((float)y - yPos, 2) < powRadius) {
-						if (building.map.GetTile(x,y).building != null && !buildings.Contains(building.map.GetTile(x, y).building)) buildings.Add(building.map.GetTile(x, y).building);
+						if (building.map.GetTile(x,y).building != null) buildings.Add(building.map.GetTile(x, y).building);
 					}
 				}
 			}
 		}
-		return buildings.ToArray();
+		return buildings;
 	}
 
 	public void DestroyRadiusDisplay() { if(parent != null) Destroy(parent.gameObject); }

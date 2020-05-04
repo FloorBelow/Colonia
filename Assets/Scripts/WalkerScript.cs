@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class WalkerScript : MonoBehaviour
 {
-    // Start is called before the first frame update
-
 	//Note that walkers have to be child of 3dworld?
 
     public float speed;
@@ -14,12 +12,16 @@ public class WalkerScript : MonoBehaviour
 	public Sprite sprite;
 	GameObject spriteObject;
 	ResourceStorageScript storage;
-
     public Queue<Job> jobs;
     public Job currentJob;
 
+    //
+    public bool visited;
+    public HashSet<GridObjectRendererScript> objectsBehindMe;
+
     public void Init(MapScript map){
         this.map = map;
+        map.walkers.Add(this);
         jobs = new Queue<Job>();
 		storage = gameObject.GetComponent<ResourceStorageScript>();
 		storage.Init();
@@ -27,7 +29,7 @@ public class WalkerScript : MonoBehaviour
 		SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
 		spriteObject.transform.position = GetSpritePos(transform.localPosition);
 		spriteRenderer.sprite = sprite;
-
+        objectsBehindMe = new HashSet<GridObjectRendererScript>();
 		currentJob = new JobIdle(this); currentJob.OnBeginJob();
 
 		//transform.position = new Vector3(transform.position.x, transform.position.y + .25f, -.1f);
@@ -38,6 +40,7 @@ public class WalkerScript : MonoBehaviour
 	}
 
 	private void OnDestroy() {
+        map.walkers.Remove(this);
 		Destroy(spriteObject);
 	}
 
@@ -56,13 +59,17 @@ public class WalkerScript : MonoBehaviour
 	public void SetSpritePos(Vector3 v) {
 		spriteObject.transform.position = v;
 		if(storage.slots[0] != null) {
-			storage.slots[0].GetComponent<ObjectRendererScript>().spriteObject.transform.position = new Vector3(v.x, v.y, v.z + 0.1f);
+			storage.slots[0].GetComponent<ObjectRendererScript>().spriteObject.transform.position = new Vector3(v.x, v.y, v.z + 0.025f);
 		}
-		
 	}
 
-	//This is converting 3dpos to spritepos so negative x and z, switched y and z
-	static Vector3 GetSpritePos(float x, float y, float z) {
+    public void SetSpriteDepth(float d) {
+        Transform t = spriteObject.transform;
+        t.position = new Vector3(t.position.x, t.position.y, d);
+    }
+
+    //This is converting 3dpos to spritepos so negative x and z, switched y and z
+    static Vector3 GetSpritePos(float x, float y, float z) {
 		return new Vector3((x - z) * -.5f, (x + z) * -.25f + y * .6125f, (x + z) * -.05f - 0.5f);
 	}
 
@@ -71,7 +78,7 @@ public class WalkerScript : MonoBehaviour
 	}
 
 	static Vector3 GetSpritePos(Vector3 v, float z) {
-		return new Vector3((v.x - v.z) * -.5f, (v.x + v.z) * -.25f + v.y * .6125f, z - 0.1f);
+		return new Vector3((v.x - v.z) * -.5f, (v.x + v.z) * -.25f + v.y * .6125f, z);
 	}
 
 	public void AddJob(Job job){
@@ -111,6 +118,7 @@ public class WalkerScript : MonoBehaviour
         {
             walker.jobDescription = "Idle";
 			walker.SetActive(false);
+            walker.spriteObject.SetActive(false);
         }
         public override bool OnUpdate()
         {
@@ -119,9 +127,14 @@ public class WalkerScript : MonoBehaviour
     }
 
     public class JobWalk : Job {
+
+        static Vector3[] directionOffsets     = new Vector3[] { new Vector3(0.25f, 0, 0.625f),  new Vector3(.25f, 0, .25f),  new Vector3(.625f, 0, .25f), new Vector3(.625f, 0, .625f) };
+        static Vector3[] directionEdgeOffsets = new Vector3[] { new Vector3(0.875f, 0, 0.625f), new Vector3(.25f, 0, .875f), new Vector3(0, 0, .25f),     new Vector3(.625f, 0, 0) };
+
         int[] tiles;
+        int direction;
         Vector3 nextPosition;
-		float z; float nextZ;
+		//float z; float nextZ;
 		int i;
 		int sizeX;
         //float oldZ;
@@ -130,10 +143,16 @@ public class WalkerScript : MonoBehaviour
         }
 
         public override void OnBeginJob() {
+            if(walker.map.rendererOverlaps[tiles[0]] != null) {
+                foreach(GridObjectRendererScript renderer in walker.map.rendererOverlaps[tiles[0]]) {
+                    renderer.walkersBehindMe.Add(walker);
+                }
+            }
 			sizeX = walker.map.sizeX;
-			z = walker.GetBuildingZ(tiles[0]);
-			nextZ = walker.GetBuildingZ(tiles[0]);
-			walker.transform.localPosition = new Vector3((tiles[0] % sizeX + tiles[1] % sizeX) / -2f -.5f, 0, (tiles[0] / sizeX + tiles[1] / sizeX) / -2f -.5f);
+			//z = walker.GetBuildingZ(tiles[0]);
+			//nextZ = walker.GetBuildingZ(tiles[0]);
+            direction = GetDirection(0);
+			walker.transform.localPosition = new Vector3(tiles[0] % sizeX * -1, 0, tiles[0] / sizeX * -1) - directionEdgeOffsets[direction];
 			//walker.spriteObject.transform.position = GetSpritePos(walker.transform.localPosition, Mathf.Min(z, nextZ));
 			//Debug.Log("Start pos = " + walker.transform.localPosition.ToString());
 
@@ -146,9 +165,10 @@ public class WalkerScript : MonoBehaviour
         {
             Vector3 newPos = Vector3.MoveTowards(walker.transform.localPosition, nextPosition, walker.speed * Time.deltaTime);
             walker.transform.localPosition = newPos;
-			walker.SetSpritePos(GetSpritePos(walker.transform.localPosition, Mathf.Min(z, nextZ)));
-			//walker.spriteObject.transform.position = GetSpritePos(walker.transform.localPosition, Mathf.Min(z, nextZ));
-			if (newPos == nextPosition) {
+            //walker.SetSpritePos(GetSpritePos(walker.transform.localPosition, Mathf.Min(z, nextZ)));
+            walker.SetSpritePos(GetSpritePos(walker.transform.localPosition, walker.spriteObject.transform.position.z));
+            //walker.spriteObject.transform.position = GetSpritePos(walker.transform.localPosition, Mathf.Min(z, nextZ));
+            if (newPos == nextPosition) {
 				if (i + 1 == tiles.Length) {
 					return true;
 				}
@@ -157,16 +177,79 @@ public class WalkerScript : MonoBehaviour
             return false;
         }
 
+        int GetDirection(int i) {
+            int diff = tiles[i + 1] - tiles[i];
+            if (diff > 1) { //UP
+                return 1;
+            } if (diff == 1) { //RIGHT
+                return 0;
+            } else if (diff == -1) { //LEFT - RIGHT
+                return 2;
+            } else if (diff < -1) { //DOWN - TOP
+                return 3;
+            }
+            return -1;
+        }
+
 		Vector3 GetNextPosition() {
 			i++;
-			z = nextZ;
-			if (i == tiles.Length - 1) {
-				nextZ = walker.GetBuildingZ(tiles[i - 1]);
-				return new Vector3((tiles[i - 1] % sizeX + tiles[i] % sizeX) / -2f - .5f, 0, (tiles[i - 1] / sizeX + tiles[i] / sizeX) / -2f - .5f);
-			}
-			nextZ = walker.GetBuildingZ(tiles[i]);
-			return new Vector3(tiles[i] % sizeX * -1 - .5f, 0, tiles[i] / sizeX * -1 - .5f);
+
+            //z = nextZ;
+
+            if (i == tiles.Length - 1) {
+                //nextZ = walker.GetBuildingZ(tiles[i - 1]);
+                return new Vector3(tiles[i - 1] % sizeX * -1, 0, tiles[i - 1] / sizeX * -1) - directionEdgeOffsets[direction];
+            }
+
+
+            if (i > 1 && walker.map.rendererOverlaps[tiles[i - 2]] != null) {
+                foreach (GridObjectRendererScript renderer in walker.map.rendererOverlaps[tiles[i - 2]]) {
+                    renderer.walkersBehindMe.Remove(walker);
+                } 
+            }
+            if (walker.map.rendererOverlaps[tiles[i - 1]] != null) {
+                foreach (GridObjectRendererScript renderer in walker.map.rendererOverlaps[tiles[i - 1]]) {
+                    renderer.walkersBehindMe.Add(walker);
+                }
+            }
+            if (walker.map.rendererOverlaps[tiles[i]] != null) {
+                foreach (GridObjectRendererScript renderer in walker.map.rendererOverlaps[tiles[i]]) {
+                    renderer.walkersBehindMe.Add(walker);
+                }
+            }
+
+            walker.objectsBehindMe.Clear();
+            GetBuildingsInFrontOf(tiles[i], tiles[i - 1]);
+            GetBuildingsInFrontOf(tiles[i - 1], tiles[i]);
+            //foreach (GridObjectRendererScript renderer in walker.objectsBehindMe) Debug.Log(renderer.gameObject.name);
+
+
+
+            Vector3 offset = directionOffsets[direction];
+            int newDirection = GetDirection(i);
+            if ((newDirection + 1) % 4 == direction) { //Moving clockwise, use new direction for offset
+                offset = directionOffsets[newDirection];
+            }
+            direction = newDirection;
+
+            //nextZ = walker.GetBuildingZ(tiles[i]);
+			return new Vector3(tiles[i] % sizeX * -1, 0, tiles[i] / sizeX * -1) - offset;
 		}
+
+        void GetBuildingsInFrontOf(int i, int notI) {
+            bool xLimit = i % walker.map.sizeX == walker.map.sizeX - 2;
+            bool yLimit = i / walker.map.sizeX == walker.map.sizeY - 2;
+            if (!xLimit) CheckAddBuildingBehind(i + 1, notI);
+            if (!yLimit) CheckAddBuildingBehind(i + walker.map.sizeX, notI);
+            if (!xLimit && !yLimit) CheckAddBuildingBehind(i + 1 + walker.map.sizeX, notI);
+        }
+
+        void CheckAddBuildingBehind(int i, int notI) {
+            if(i != notI && walker.map.tiles[i].building != null) {
+                GridObjectRendererScript renderer = walker.map.tiles[i].building.GetComponent<GridObjectRendererScript>();
+                if (!renderer.data.isTerrainOnly) walker.objectsBehindMe.Add(renderer);
+            }
+        }
 
         Vector3 GetPosition() {
             int x = tiles[i] % sizeX;
@@ -292,6 +375,7 @@ public class WalkerScript : MonoBehaviour
 		public override void OnBeginJob() {
 			house.AddPopulation(1);
 			house.occupantsArriving = false;
+            foreach (var renderer in walker.map.renderers) renderer.walkersBehindMe.Remove(walker);
 			Destroy(walker.gameObject);
 		}
 		public override bool OnUpdate() {

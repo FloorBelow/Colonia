@@ -208,7 +208,7 @@ public class GameManagerScript : MonoBehaviour {
 	void SelectBuilding(GameObject building) {
 		if (selectedObject != null && selectedObject.GetComponent<BuildingAreaDisplayScript>() != null) selectedObject.GetComponent<BuildingAreaDisplayScript>().DestroyRadiusDisplay();
 		selectedObject = building;
-		//if (building.GetComponent<BuildingAreaDisplayScript>() != null) building.GetComponent<BuildingAreaDisplayScript>().CreateRadiusDisplay();
+		if (selectedObject != null && building.GetComponent<BuildingAreaDisplayScript>() != null) building.GetComponent<BuildingAreaDisplayScript>().CreateRadiusDisplay();
 	}
 
 	void DeselectBuilding() {

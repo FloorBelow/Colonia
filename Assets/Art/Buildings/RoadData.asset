@@ -14,6 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spriteNorm: {fileID: 3981893331787388613, guid: 9171b732bf44a4243995fadc83cd7734,
     type: 3}
+  spriteOverlay: {fileID: 0}
   sprites:
   - {fileID: -1771956003596224141, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
   - {fileID: 8341091881766010338, guid: 24204f6d0516a234098201b1774fffc1, type: 3}
@@ -35,5 +36,4 @@ MonoBehaviour:
   sizeX: 1
   sizeY: 1
   sizeZ: 1
-  spriteOverlay: {fileID: 0}
-  isTerrainOnly: 0
+  isTerrainOnly: 1

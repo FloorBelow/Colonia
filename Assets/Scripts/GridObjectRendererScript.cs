@@ -10,14 +10,18 @@ public class GridObjectRendererScript : MonoBehaviour
     public GridObjectRendererData data;
     public GridObjectRendererData fadeData;
     public int x; public int y; public int z;
-    public GameObject spriteObject; //Public for sorting sprites, should be moved here? static method on this[]
+    public GameObject spriteObject; //Public for sorting sprites, should be moved here? static method on this[] LATER COMMENT I DONT KNOW WHAT THIS MEANS
     public GameObject modelObject;
 	GameObject spriteOverlayObject;
     public bool flip;
     public List<GridObjectRendererScript> objectsBehindMe;
-	public bool visited;
+    public HashSet<WalkerScript> walkersBehindMe;
+    public bool visited;
 
     public void CreateRenderers(GameObject spriteObject, GameObject modelObject) {
+
+        walkersBehindMe = new HashSet<WalkerScript>();
+
         //2d
         this.spriteObject = spriteObject; this.modelObject = modelObject;
         SpriteRenderer spriteRenderer = spriteObject.AddComponent<SpriteRenderer>();
@@ -91,7 +95,7 @@ public class GridObjectRendererScript : MonoBehaviour
     }
 
     public void CheckOverlaps(List<GridObjectRendererScript> objects) {
-        if (objectsBehindMe == null) objectsBehindMe = new List<GridObjectRendererScript>();
+        if (objectsBehindMe == null) { objectsBehindMe = new List<GridObjectRendererScript>(); }
         for (int i = 0; i < objects.Count; i++) {
             if(objects[i] != this) {
                 int overlap = CheckOverlap(objects[i]);
@@ -142,39 +146,34 @@ public class GridObjectRendererScript : MonoBehaviour
         return 0;
     }
 
+    bool CheckOverlap(WalkerScript walker) {
+        int walkerX = (int)walker.transform.position.x * -1;
+        int walkerY = (int)walker.transform.position.z * -1;
+        return CheckOverlap(walkerX, walkerY);
+    }
+
+    public bool CheckOverlap(int walkerX, int walkerY) {
+        int sizeX = flip ? data.sizeY : data.sizeX;
+        int sizeY = flip ? data.sizeX : data.sizeY;
+        int sizeZ = data.sizeZ;
+        if (walkerX < x || walkerY < y || walkerX >= x + sizeX + sizeZ || walkerY >= y + sizeY + sizeZ || walkerX - walkerY < x - y - sizeY || walkerX - walkerY > x - y + sizeX) return false;
+        return true;
+    }
+
     //Toposort
-    public static void SortSprites(List<GridObjectRendererScript> objects) {
-        int depth = objects.Count;
+    public static void SortSprites(List<GridObjectRendererScript> objects, List<WalkerScript> walkers) {
+        int depth = objects.Count + walkers.Count;
 		for(int i = 0; i < objects.Count; i++) {
 			depth = VisitObject(objects[i], depth);
 		}
-		for (int i = 0; i < objects.Count; i++) {
-			objects[i].visited = false;
-		}
-		/*
-        List<GridObjectRendererScript> sortObjects = new List<GridObjectRendererScript>(objects);
-        while (sortObjects.Count > 0) {
-            for (int i = sortObjects.Count - 1; i >= 0; i--) {
-                if (sortObjects[i].objectsBehindMe.Count == 0) {
-                    sortObjects[i].spriteObject.transform.position = new Vector3(sortObjects[i].spriteObject.transform.position.x, sortObjects[i].spriteObject.transform.position.y, depth);
-                    sortObjects.RemoveAt(i);
-                    depth -= 1;
-                } else {
-					for(int j = 0; j < sortObjects[i].objectsBehindMe.Count; j++) {
-						for(int k = 0; k < sortObjects.Count; k++) {
-							if (sortObjects[k] == sortObjects[i].objectsBehindMe[j]) goto Break;
-						}
-					}
-                    sortObjects[i].spriteObject.transform.position = new Vector3(sortObjects[i].spriteObject.transform.position.x, sortObjects[i].spriteObject.transform.position.y, depth);
-                    sortObjects.RemoveAt(i);
-                    depth -= 1;
-					Break:;
-                }
-
-            }
+        for (int i = 0; i < objects.Count; i++) {
+            objects[i].visited = false;
         }
-		*/
-	}
+        for (int i = 0; i < walkers.Count; i++) {
+            walkers[i].visited = false;
+        }
+
+    }
 
 	public static int VisitObject(GridObjectRendererScript obj, int depth) {
 		if (obj.visited) return depth;
@@ -182,11 +181,26 @@ public class GridObjectRendererScript : MonoBehaviour
 		for(int i = 0; i < obj.objectsBehindMe.Count; i++) {
 			depth = VisitObject(obj.objectsBehindMe[i], depth);
 		}
+        foreach(WalkerScript walker in obj.walkersBehindMe) {
+            depth = VisitObject(walker, depth);
+        }
 		obj.SetSpriteDepth(depth / 10f);
 		return depth - 1;
 	}
 
-	public void SetSpriteDepth(float d) {
+    public static int VisitObject(WalkerScript walker, int depth) {
+        if (walker.visited) return depth;
+        walker.visited = true;
+        foreach(GridObjectRendererScript renderer in walker.objectsBehindMe) {
+            depth = VisitObject(renderer, depth);
+        }
+        walker.SetSpriteDepth(depth / 10f);
+        return depth - 1;
+    }
+
+
+
+    public void SetSpriteDepth(float d) {
 		Transform t = spriteObject.transform;
 		t.position = new Vector3(t.position.x, t.position.y, d);
 	}

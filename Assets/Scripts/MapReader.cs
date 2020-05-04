@@ -38,6 +38,7 @@ public class MapReader
 				SeekNext();
 			}
 			string buildingName = ReadNext();
+			if (!GameManagerScript.m.buildings.ContainsKey(buildingName)) Debug.LogError(buildingName);
 			int x = Int32.Parse(ReadNext());
 			int y = Int32.Parse(ReadNext());
 			bool flip = ReadNext() == "1";

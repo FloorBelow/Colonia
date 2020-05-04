@@ -22,9 +22,15 @@ public class BuildingNeedProviderScript : InitScript, PeriodicUpdate
 	}
 
 	public void AddNeeds() {
-		foreach(GameObject building in area.GetBuildingsInRange()) {
-			if (building.HasComponent<BuildingHouseScript>()) building.GetComponent<BuildingHouseScript>().AddNeed(this);
+		HashSet<GameObject> buildings = area.GetBuildingsInRange(); //TODO should just make a IsInRange method and apply on all houses in map
+		for (int i = 0; i < building.map.houses.Count; i++) {
+			if (buildings.Contains(building.map.houses[i].gameObject)) building.map.houses[i].AddNeed(this);
 		}
+		/*
+		foreach(GameObject building in area.GetBuildingsInRange()) {
+			BuildingHouseScript house = building.GetComponent<BuildingHouseScript>(); if (house != null) house.AddNeed(this);
+		}
+		*/
 	}
 
 	private void OnDestroy() {

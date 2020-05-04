@@ -27,6 +27,8 @@ public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 		return true;
 	}
 
+
+
 	void PeriodicUpdate.PeriodicUpdate() {
 		 if(isActive && storage.GetCount(resourceToDump) >= minToDump && dumper.currentJob.GetType() == typeof(WalkerScript.JobIdle)) {
 			List<int[]> paths = new List<int[]>();

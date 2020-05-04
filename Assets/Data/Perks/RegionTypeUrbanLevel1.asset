@@ -18,14 +18,8 @@ MonoBehaviour:
   iconColor: {fileID: 11400000, guid: b3b7efb080bac9047bbec6585b32cc38, type: 2}
   outlineColor: {fileID: 11400000, guid: 2383b22f1c8e9044595f16f7ce7f5353, type: 2}
   buildingUnlocks:
-  - {fileID: 1457913387518816, guid: f2c3e6ea61e87964ab9fa7734fecdcfb, type: 3}
-  - {fileID: 1679998595150926, guid: 8911ad7b8681e2540a81ae11938074a7, type: 3}
-  - {fileID: 1679998595150926, guid: 70e64af8826d08d46a985f7b5e3cd982, type: 3}
-  - {fileID: 1679998595150926, guid: ebb3724d60aa282468e52c19e73c4fab, type: 3}
-  - {fileID: 1399453005128056, guid: 215d7fd0409edec418e89d2692ca4306, type: 3}
-  - {fileID: 1679998595150926, guid: acee6b4068a9d6c4aa96eebf9893cb63, type: 3}
-  - {fileID: 1101187664243718, guid: fde3000f762c76140b654e62178bfaad, type: 3}
   - {fileID: 1399453005128056, guid: 5ab65fd93e0208240b32318eca62b19e, type: 3}
+  - {fileID: 1101187664243718, guid: 80c3e5991bea8f546a0db983cbf7862d, type: 3}
   parent: {fileID: 11400000, guid: d4237b02cc5003948b41868502baccef, type: 2}
   upgrade: {fileID: 11400000, guid: a9520d367ce0ae942add047919887c74, type: 2}
   levelUpRequirement: {fileID: 11400000, guid: ec8c238e0f4de444aa0323884a7f7306, type: 2}

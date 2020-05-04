@@ -88,7 +88,7 @@ public static class PathFindScript
 
 
     public static int[] PathfindNew(MapScript map, int startX, int startY, int endX, int endY) {
-        Debug.Log(System.String.Format("Pathfinding from {0},{1} to {2},{3}", startX, startY, endX, endY));
+        //Debug.Log(System.String.Format("Pathfinding from {0},{1} to {2},{3}", startX, startY, endX, endY));
         return PathfindNew(map, startX + startY * map.sizeX, endX + endY * map.sizeX);
     }
 
@@ -99,7 +99,7 @@ public static class PathFindScript
         while(frontier.Count > 0) {
             int i = frontier.Dequeue();
             if (i == endIndex) {
-                Debug.Log("found path");
+                //Debug.Log("found path");
                 List<int> path = new List<int>();
                 path.Add(i);
                 while(i != startIndex) {
@@ -144,7 +144,7 @@ public static class PathFindScript
 		GameObject building = map.GetTile(i % map.sizeX, i / map.sizeX).building;
 		leftStart = parentLeftStart;
 		if (building != null) {
-			if (building.tag == "Road") { leftStart = true; return true; }
+			if (building.CompareTag("Road")) { leftStart = true; return true; }
 			if (!parentLeftStart && building == startBuilding) return true;
 			if (parentLeftStart && building == endBuilding) return true;
 		}

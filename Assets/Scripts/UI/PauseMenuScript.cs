@@ -6,7 +6,12 @@ public class PauseMenuScript : MonoBehaviour
 {
 	bool isActive;
 	public GameObject pausePanel;
-	
+
+	private void Start() {
+		isActive = false;
+		pausePanel.SetActive(false);
+	}
+
 	public void ToggleActive() {
 		isActive = !isActive;
 		pausePanel.SetActive(isActive);

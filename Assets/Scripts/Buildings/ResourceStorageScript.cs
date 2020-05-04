@@ -22,7 +22,7 @@ public class ResourceStorageScript : InitScript {
 		foreach (ResourceMaximum maximum in maximaComponents) maxima[maximum.resource] = maximum.maximum;
 		List<Vector3> positionsList = new List<Vector3>();
         for (int i = 0; i < transform.childCount; i++) {
-            if(transform.GetChild(i).tag == "DummyPos") {
+            if(transform.GetChild(i).CompareTag("DummyPos")) {
                 positionsList.Add(transform.GetChild(i).localPosition);
             }
         }

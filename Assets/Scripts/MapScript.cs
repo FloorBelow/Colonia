@@ -17,11 +17,13 @@ public class MapScript : MonoBehaviour {
     public int sizeY;
 	[UnityEngine.Serialization.FormerlySerializedAs("tiles2")]
 	public Tile[] tiles;
+	public HashSet<GridObjectRendererScript>[] rendererOverlaps;
     public List<GameObject> buildings;
 	public List<BuildingHouseScript> houses;
 	public List<BuildingWorkerScript> workBuildings;
 	public List<ResourceStorageScript> stores;
 	public List<GridObjectRendererScript> renderers;
+	public List<WalkerScript> walkers;
 	//public SetGameObject buildingsSet;
 	public int population;
 	public int workersRequired;
@@ -37,10 +39,12 @@ public class MapScript : MonoBehaviour {
 		public RegionScript region;
 	}
 
-	void Start () {
+	void Awake () {
 		updateQueue = new Queue<PeriodicUpdate>();
 		resourceCounts = new Dictionary<ResourceData, int>();
 		foreach (ResourceData r in UtilityScript.data.resources) resourceCounts[r] = 0;
+		rendererOverlaps = new HashSet<GridObjectRendererScript>[sizeX * sizeY];
+		walkers = new List<WalkerScript>();
 	}
 
 	private void Update() {
@@ -53,9 +57,10 @@ public class MapScript : MonoBehaviour {
 
 
 		int p = 0;
+		bool occupantArriving = false;
 		//Occupants Arriving
 		foreach(BuildingHouseScript house in houses) {
-			if(house.GetVacancy() > 0) {
+			if(house.GetVacancy() > 0 && !occupantArriving) {
 				int[] path = PathFindScript.Pathfind(this, 0, sizeY / 2, house.gameObject.GetComponent<BuildingScript>().x, house.gameObject.GetComponent<BuildingScript>().y, true, true);
 				if (path != null) {
 					//Debug.Log("new immigrant arriving");
@@ -65,6 +70,7 @@ public class MapScript : MonoBehaviour {
 					immigrant.AddJob(new WalkerScript.JobWalk(immigrant, path));
 					immigrant.AddJob(new WalkerScript.JobAddPopulation(immigrant, house));
 					house.occupantsArriving = true;
+					occupantArriving = true;
 				}
 			}
 			p += house.population;
@@ -75,6 +81,8 @@ public class MapScript : MonoBehaviour {
 			UpdateWorkers();
 		}
 		UpdateResourceCounts();
+
+		SortSprites();
 	}
 
 	public Tile GetTile(int x, int y) {
@@ -179,7 +187,7 @@ public class MapScript : MonoBehaviour {
 		//there's some fragile ordering stuff going on here i need to look more closely into later
 
 		renderer.CreateRenderers(new GameObject(buildingScript.buildingName + " " + buildings.Count + " Sprite"), newBuilding);
-		if (renderer.data.isTerrainOnly) renderer.SetPosition(x, y, sizeX * sizeY); else renderer.SetPosition(x, y);
+		if (renderer.data.isTerrainOnly) renderer.SetPosition(x, y, sizeX * sizeY /10); else renderer.SetPosition(x, y);
 
 		if (buildingScript.sizeX == buildingScript.sizeY) flip = false;
 		if (flip) {
@@ -193,11 +201,35 @@ public class MapScript : MonoBehaviour {
 			}
 		}
 		//Sort grid renderers (do we need to put nongrid renderers here as well?
-		//GridObjectRendererScript[] renderers = new GridObjectRendererScript[buildings.Count];
 		if (!renderer.data.isTerrainOnly) {
 			renderer.CheckOverlaps(renderers);
 			renderers.Add(renderer);
-			if (sortSprites) GridObjectRendererScript.SortSprites(renderers);
+
+
+			//Add renderer overlap data TODO remove on destroy
+			int aSizeX = flip ? renderer.data.sizeY : renderer.data.sizeX;
+			int aSizeY = flip ? renderer.data.sizeX : renderer.data.sizeY;
+			int aSizeZ = renderer.data.sizeZ;
+			for (int v = y; v < y + aSizeY + aSizeZ; v++) {
+				for (int u = x; u < x + aSizeX + aSizeZ; u++) {
+					if(u - v >= x - y - aSizeY && u - v <= x - y + aSizeX) {
+						if (rendererOverlaps[u + v * sizeX] == null) rendererOverlaps[u + v * sizeX] = new HashSet<GridObjectRendererScript>();
+						rendererOverlaps[u + v * sizeX].Add(renderer);
+					}
+				}
+			}
+			//if (walkerX < x || walkerY < y || walkerX >= x + sizeX + sizeZ || walkerY >= y + sizeY + sizeZ || walkerX - walkerY < x - y - sizeY || walkerX - walkerY > x - y + sizeX) return false;
+			//return true;
+
+
+			if (sortSprites) GridObjectRendererScript.SortSprites(renderers, walkers);
+			/*
+			for(int v = 0; v < sizeY; v++) {
+				for(int u = 0; u < sizeX; u++) {
+					if (renderer.CheckOverlap(u, v)) Debug.Log($"({u},{v}) overlaps with {newBuilding.name}");
+				}
+			}
+			*/
 		}
 
 
@@ -221,11 +253,12 @@ public class MapScript : MonoBehaviour {
 		return newBuilding;
     }
 
-	public void SortSprites() { GridObjectRendererScript.SortSprites(renderers); }
+	public void SortSprites() { GridObjectRendererScript.SortSprites(renderers, walkers); }
 
 	public bool RemoveBuilding(int x, int y) {
 		GameObject buildingToDestroy = GetTile(x, y).building;
 		if (buildingToDestroy != null) {
+			GetTile(x, y).region.RemoveBuilding(buildingToDestroy.GetComponent<BuildingScript>());
 			buildings.Remove(buildingToDestroy);
 			houses.Remove(buildingToDestroy.GetComponent<BuildingHouseScript>());
 			workBuildings.Remove(buildingToDestroy.GetComponent<BuildingWorkerScript>());
@@ -235,6 +268,9 @@ public class MapScript : MonoBehaviour {
 			renderers.Remove(gridRenderer);
 			for(int i = 0; i < renderers.Count; i++) {
 				renderers[i].objectsBehindMe.Remove(gridRenderer);
+			}
+			for(int i = 0; i < rendererOverlaps.Length; i++) {
+				rendererOverlaps[i].Remove(gridRenderer);
 			}
 			Destroy(buildingToDestroy);
 			return true;
@@ -372,6 +408,7 @@ public class MapScript : MonoBehaviour {
 		stores.Clear();
 		renderers.Clear();
 		updateQueue.Clear();
+		rendererOverlaps = new HashSet<GridObjectRendererScript>[sizeX * sizeY];
 	}
 
 }

@@ -15,7 +15,6 @@ public class RegionHouseCounterPanelScript : MonoBehaviour
 		int pop = region.regionType.levelUpRequirement.population;
 		populationCounter.text = region.GetPopulation().ToString();
 		upgradeButton.interactable = GameManagerScript.m.debugMode ? true : values[0] == 1;
-		Debug.Log(values.Length);
 		for(int i = 0; i < 5; i++) {
 			if (values[i + 1] == -1) {
 				needCounters[i].SetActive(false);
