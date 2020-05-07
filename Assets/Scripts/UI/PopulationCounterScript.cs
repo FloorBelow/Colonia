@@ -5,6 +5,8 @@ using UnityEngine;
 public class PopulationCounterScript : MonoBehaviour
 {
 	TMPro.TextMeshProUGUI text;
+    int pop;
+    int work;
     void Start()
     {
 		text = gameObject.GetComponent<TMPro.TextMeshProUGUI>();
@@ -13,6 +15,12 @@ public class PopulationCounterScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-		text.text = System.String.Format("{0}/{1}", GameManagerScript.m.activeMap.population, GameManagerScript.m.activeMap.workersRequired) ;
+        int newPop = GameManagerScript.m.activeMap.workersRequired;
+        int newWork = GameManagerScript.m.activeMap.workersRequired;
+        if(newPop != pop || newWork != work) {
+            pop = newPop; work = newWork;
+            text.text = $"{pop}/{work}";
+        }
+        
     }
 }

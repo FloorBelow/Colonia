@@ -6,12 +6,17 @@ public class MapResourceCounterScript : MonoBehaviour
 {
 	TMPro.TextMeshProUGUI text;
 	public ResourceData resource;
+	int count;
+
 	void Start() {
 		text = gameObject.GetComponent<TMPro.TextMeshProUGUI>();
 	}
 
 	void Update() {
-		text.text = GameManagerScript.m.activeMap.resourceCounts[resource].ToString();
+		int newCount = GameManagerScript.m.activeMap.resourceCounts[resource];
+		if (newCount == count) return;
+		count = newCount;
+		text.text = count.ToString();
 	}
 
 	public void UpdateCount() {

@@ -48,8 +48,8 @@ public class BuildingResourceFetcherScript : BuildingJobScript
 					if (otherStorage != null && otherStorage.gameObject != gameObject && otherStorage.gameObject.HasKeyword(fetchKeywords) && storage.GetSpaceFor(resourceToFetch) >= minToFetch) {
 						if (otherStorage.GetCount(resourceToFetch) >= minToFetch) {
 							otherBuildingScript = otherStorage.GetComponent<BuildingScript>();
-							int[] path = PathFindScript.Pathfind(buildingScript.map, buildingScript.x, buildingScript.y, otherBuildingScript.x, otherBuildingScript.y, true);
-							if (path != null) {
+                            int[] path = PathFindScript.Pathfind(buildingScript.map, startBuilding:gameObject, endBuilding:otherStorage.gameObject);
+                            if (path != null) {
 								paths.Add(path);
 								otherStores.Add(otherStorage);
 							}

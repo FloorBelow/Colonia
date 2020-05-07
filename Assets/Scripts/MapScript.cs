@@ -37,6 +37,7 @@ public class MapScript : MonoBehaviour {
 	public struct Tile {
 		public GameObject building;
 		public RegionScript region;
+		public bool road;
 	}
 
 	void Awake () {
@@ -61,7 +62,7 @@ public class MapScript : MonoBehaviour {
 		//Occupants Arriving
 		foreach(BuildingHouseScript house in houses) {
 			if(house.GetVacancy() > 0 && !occupantArriving) {
-				int[] path = PathFindScript.Pathfind(this, 0, sizeY / 2, house.gameObject.GetComponent<BuildingScript>().x, house.gameObject.GetComponent<BuildingScript>().y, true, true);
+				int[] path = PathFindScript.Pathfind(this, 0, sizeY / 2, house.gameObject);
 				if (path != null) {
 					//Debug.Log("new immigrant arriving");
 					//WalkerScript immigrant = Instantiate(GameManagerScript.m.immigrantWalkerPrefab, new Vector3(-16.5f, 7.75f, 0), Quaternion.identity).GetComponent<WalkerScript>();
@@ -91,12 +92,11 @@ public class MapScript : MonoBehaviour {
 	}
 
 	void UpdateResourceCounts() {
-		foreach(ResourceData resource in resourceCounts.Keys.ToArray()) {
-			resourceCounts[resource] = 0;
-		}
+		resourceCounts.Clear();
 		foreach(ResourceStorageScript storage in stores) {
 			foreach(ResourceData resource in storage.totals.Keys) {
-				resourceCounts[resource] += storage.totals[resource];
+				resourceCounts.TryGetValue(resource, out int count);
+				resourceCounts[resource] = count + storage.totals[resource];
 			}
 		}
 	}
@@ -171,6 +171,8 @@ public class MapScript : MonoBehaviour {
 		if(newBuilding.HasKeyword(GameManagerScript.m.resourceStoreKeyword)) {
 			stores.Add(newBuilding.GetComponent<ResourceStorageScript>());
 		}
+
+		if (newBuilding.CompareTag("Road")) tiles[x + y * sizeX].road = true;
 
 		BuildingScript buildingScript = newBuilding.GetComponent<BuildingScript>();
 		GetTile(x,y).region.AddBuilding(buildingScript);
@@ -263,6 +265,7 @@ public class MapScript : MonoBehaviour {
 			houses.Remove(buildingToDestroy.GetComponent<BuildingHouseScript>());
 			workBuildings.Remove(buildingToDestroy.GetComponent<BuildingWorkerScript>());
 			stores.Remove(buildingToDestroy.GetComponent<ResourceStorageScript>());
+			if (buildingToDestroy.CompareTag("Road")) tiles[x + y * sizeX].road = false;
 
 			GridObjectRendererScript gridRenderer = buildingToDestroy.GetComponent<GridObjectRendererScript>();
 			renderers.Remove(gridRenderer);

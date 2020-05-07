@@ -37,7 +37,7 @@ public class BuildingResourceDumperScript : BuildingJobScript, PeriodicUpdate {
 				ResourceStorageScript otherStorage = building.GetComponent<ResourceStorageScript>();
 				if (otherStorage != null && otherStorage.gameObject != gameObject && building.HasKeyword(dumpKeywords) && otherStorage.GetSpaceFor(resourceToDump) >= minToDump) {
 					BuildingScript otherBuildingScript = building.GetComponent<BuildingScript>();
-					int[] path = PathFindScript.Pathfind(buildingScript.map, buildingScript.x, buildingScript.y, otherBuildingScript.x, otherBuildingScript.y, true);
+					int[] path = PathFindScript.Pathfind(buildingScript.map, startBuilding: gameObject, endBuilding: building.gameObject);
 					if (path != null) {
 						paths.Add(path);
 						otherStores.Add(otherStorage);

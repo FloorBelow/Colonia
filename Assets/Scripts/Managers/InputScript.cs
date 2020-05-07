@@ -11,18 +11,20 @@ public class InputScript : MonoBehaviour {
     public int mouseTileY;
 	public bool isMouseOverUI;
 
+	Camera main;
+
 	public delegate void OnMouseTileChangeDelegate(int x, int y);
 	public static event OnMouseTileChangeDelegate OnMouseTileChange;
 
 
     // Use this for initialization
     void Start () {
-		
+		main = Camera.main;
 	}
 
     // Update is called once per frame
     void Update() {
-        mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        mousePos = main.ScreenToWorldPoint(Input.mousePosition);
         mousePos.z = 0;
 		int newMouseTileX = Mathf.FloorToInt(mousePos.y * 2 + mousePos.x);
 		int newMouseTileY = Mathf.FloorToInt(mousePos.y * 2 - mousePos.x);

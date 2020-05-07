@@ -40,6 +40,7 @@ public class WalkerScript : MonoBehaviour
 	}
 
 	private void OnDestroy() {
+        foreach (var renderer in map.renderers) renderer.walkersBehindMe.Remove(this);
         map.walkers.Remove(this);
 		Destroy(spriteObject);
 	}
@@ -375,7 +376,6 @@ public class WalkerScript : MonoBehaviour
 		public override void OnBeginJob() {
 			house.AddPopulation(1);
 			house.occupantsArriving = false;
-            foreach (var renderer in walker.map.renderers) renderer.walkersBehindMe.Remove(walker);
 			Destroy(walker.gameObject);
 		}
 		public override bool OnUpdate() {

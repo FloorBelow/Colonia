@@ -331,7 +331,7 @@ public class GameManagerScript : MonoBehaviour {
 	}
 
 	void PlaceRoadSegmentOnMouseTileChange(int x, int y) {
-		int[] path = PathFindScript.PathfindNew(activeMap, roadGhosts[0].x, roadGhosts[0].y, x, y);
+		int[] path = PathFindScript.Pathfind(activeMap, roadGhosts[0].x, roadGhosts[0].y, x, y);
 		if(path != null) {
 			for (int i = 0; i < roadGhosts.Count; i++) {
 				Destroy(roadGhosts[i].sprite);
